@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=20260925">
+<link rel="stylesheet" href="/assets/site.css?v=20260925b">
 </head>
 <body>
 <div class="strip"><div class="wrap">
@@ -32,13 +32,15 @@
 <main>
 <section class="page-hero" style="padding-bottom:24px"><div class="wrap" style="grid-template-columns:1fr">
   <div class="reveal" style="max-width:760px">
-    <p class="eyebrow">Servicios y precios</p>
-    <h1>Todo lo que tu consulta necesita, <em>en un solo carrito.</em></h1>
-    <p class="lede">Agrega los servicios que quieres contratar, elige cuántos meses cubrir y envíanos la solicitud. Los descuentos por pago semestral o anual se aplican solos.</p>
+    <p class="eyebrow">Servicios</p>
+    <h1>Todo lo que tu consulta necesita, <em>en un solo lugar.</em></h1>
+    <p class="lede">Sistemas clínicos, sitios web, gestión de redes y paquetes para especialistas. Regístrate una sola vez para ver los precios, armar tu carrito y pagar con tarjeta o por transferencia.</p>
   </div>
 </div></section>
 
 <section style="padding-bottom:72px"><div class="wrap">
+  <div id="ret-banner" hidden role="status"></div>
+
   <div class="client-box">
     <p><b>¿Ya tienes un sistema Wise?</b>Paga tus servicios activos con tarjeta usando tu ID de sistema. La renovación se aplica al instante.</p>
     <a class="btn dark" href="https://pagos.wandywise.com">Ir al portal de pagos →</a>
@@ -48,63 +50,80 @@
     <div>
       <section class="panel" aria-labelledby="h-cat" id="catalogo">
         <h3 id="h-cat">Servicios</h3>
-        <p class="sub">Precios estándar en RD$. Si acordaste una tarifa distinta, se respeta en tu recibo.</p>
+        <p class="sub" id="cat-sub">Conoce cada servicio. Los precios se muestran al registrarte.</p>
         <div class="svc-tabs" role="tablist" id="tabs"></div>
         <p class="catnote" id="catnote"></p>
         <div id="catalog"></div>
       </section>
 
-      <section class="misc" id="miscelaneo" aria-labelledby="h-misc">
+      <section class="misc" id="miscelaneo" aria-labelledby="h-misc" hidden>
         <div>
           <div id="misc-banner" hidden role="status"></div>
           <p class="eyebrow">Pago en línea</p>
           <h3 id="h-misc" style="font-size:24px;font-weight:600;margin:0">Servicio misceláneo</h3>
-          <p class="price num">US$20 <small>pago único</small></p>
+          <p class="price num">US$<span id="misc-usd">20</span> <small>pago único</small></p>
           <p style="color:var(--muted);margin:10px 0 0">Para tareas puntuales que no forman parte de tu plan.</p>
           <ul><li>Ajustes y configuraciones pequeñas</li><li>Reportes o exportaciones especiales</li><li>Soporte fuera de plan</li><li>Otros servicios breves acordados por WhatsApp</li></ul>
           <p class="note">Pago seguro con tarjeta a través de Stripe. Recibirás el recibo por correo.</p>
         </div>
         <form class="panel" id="f-misc" novalidate style="box-shadow:none">
-          <label class="fld"><span>Nombre completo</span><input class="field" name="nombre" required minlength="3" autocomplete="name"></label>
-          <div class="f2">
-            <label class="fld"><span>WhatsApp</span><input class="field" name="whatsapp" required inputmode="tel" autocomplete="tel" placeholder="809 000 0000"></label>
-            <label class="fld"><span>Correo <small style="font-weight:400;color:var(--muted)">(para el recibo)</small></span><input class="field" type="email" name="email" autocomplete="email"></label>
-          </div>
+          <p class="sub" style="margin-bottom:12px">Usaremos los datos de tu registro para el recibo y para contactarte.</p>
           <label class="fld"><span>¿Qué servicio necesitas?</span><textarea class="field" name="descripcion" required minlength="5" maxlength="300" placeholder="Ej.: agregar un nuevo formato de receta"></textarea></label>
           <button class="cta" type="submit" style="margin-top:4px">Pagar US$20 con tarjeta</button>
           <div id="misc-msg" class="fmsg" hidden role="status"></div>
         </form>
       </section>
 
-      <div class="terms">
+      <div class="terms" id="terms" hidden>
         <div><h3>Descuentos por adelantado</h3><p>Membresía del sistema: 5 % pagando 6 meses y 15 % pagando 12. Administración web y paquetes: 5 % y 10 %. Redes y recordatorios: 10 % al año.</p></div>
         <div><h3>Cobro a fin de mes</h3><p>Los servicios mensuales se cobran al cierre de cada mes. Recibes aviso por WhatsApp antes del vencimiento.</p></div>
         <div><h3>Implementaciones en dos partes</h3><p>Sitios web: 50 % al iniciar y 50 % antes de la entrega. La administración mensual empieza 30 días después de publicar.</p></div>
       </div>
     </div>
 
-    <aside class="panel cart" aria-labelledby="h-cart">
-      <h3 id="h-cart">Tu solicitud <span id="count">0 servicios</span></h3>
-      <div id="items"></div>
-      <div class="totals num" id="totals"></div>
+    <aside class="panel cart" id="precios" aria-live="polite">
+      <!-- Registro para ver precios -->
+      <div id="gate">
+        <p class="eyebrow" style="margin-bottom:6px">Precios</p>
+        <h3 style="margin:0 0 4px">Regístrate para ver los precios</h3>
+        <p class="sub">Te enviamos un código por SMS para confirmar tu número. Solo lo harás una vez.</p>
+        <form id="f-reg" novalidate>
+          <div class="f2">
+            <label class="fld"><span>Nombre</span><input class="field" name="nombre" required minlength="2" autocomplete="given-name"></label>
+            <label class="fld"><span>Apellido</span><input class="field" name="apellido" required minlength="2" autocomplete="family-name"></label>
+          </div>
+          <label class="fld"><span>Especialidad</span><input class="field" name="especialidad" required minlength="2" placeholder="Ej.: Pediatría"></label>
+          <label class="fld"><span>Teléfono móvil</span><input class="field" name="telefono" required inputmode="tel" autocomplete="tel" placeholder="809 000 0000"></label>
+          <label class="fld"><span>Correo electrónico</span><input class="field" type="email" name="email" required autocomplete="email"></label>
+          <label class="chk"><input type="checkbox" required><span>Acepto que WandyWise use estos datos para enviarme el código y darme seguimiento, según la <a href="/privacidad/">Política de privacidad</a>.</span></label>
+          <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button class="cta" type="submit">Enviarme el código</button>
+        </form>
+        <form id="f-code" novalidate hidden>
+          <p style="margin:0 0 12px">Escribe el código de 6 dígitos que enviamos por SMS al <b id="tel-mask"></b>.</p>
+          <label class="fld"><span>Código de verificación</span><input class="field num" name="codigo" required inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" style="font-size:22px;letter-spacing:.3em;text-align:center"></label>
+          <button class="cta" type="submit">Ver precios</button>
+          <p class="hint"><button type="button" id="re-send" class="zoombtn" style="border:0;background:none;color:var(--mint-dark);text-decoration:underline">Enviar otro código</button> · <button type="button" id="re-edit" class="zoombtn" style="border:0;background:none;color:var(--mint-dark);text-decoration:underline">Cambiar mis datos</button></p>
+        </form>
+        <div id="gate-msg" class="fmsg" hidden role="status"></div>
+      </div>
 
-      <div style="margin-top:16px">
-        <label class="fld"><span>Nombre de la especialista</span><input class="field" id="nombre" placeholder="Dra. Nombre Apellido" autocomplete="name"></label>
-        <div class="f2">
-          <label class="fld"><span>WhatsApp</span><input class="field" id="tel" placeholder="809 000 0000" inputmode="tel" autocomplete="tel"></label>
-          <label class="fld"><span>ID de sistema <small style="font-weight:400;color:var(--muted)">(si tienes)</small></span><input class="field" id="sysid" placeholder="WWHS-KID-0A7534" autocomplete="off" spellcheck="false" style="text-transform:uppercase"></label>
+      <!-- Carrito (visible después de verificar) -->
+      <div id="cartbox" hidden>
+        <h3>Tu carrito <span id="count">0 servicios</span></h3>
+        <p class="sub" style="margin:0 0 6px" id="hola"></p>
+        <div id="items"></div>
+        <div class="totals num" id="totals"></div>
+        <label class="fld" style="margin-top:14px"><span>ID de sistema <small style="font-weight:400;color:var(--muted)">(si ya tienes uno)</small></span><input class="field" id="sysid" placeholder="WWHS-KID-0A7534" autocomplete="off" spellcheck="false" style="text-transform:uppercase"></label>
+        <div class="opts" role="radiogroup" aria-label="Método de pago">
+          <label class="opt"><input type="radio" name="metodo" value="tarjeta" checked><span>Tarjeta de crédito o débito<small>Pago seguro en línea con Stripe. Recibes el recibo por correo.</small></span></label>
+          <label class="opt"><input type="radio" name="metodo" value="transferencia"><span>Transferencia bancaria<small>Registramos tu pedido y te enviamos los datos bancarios por WhatsApp.</small></span></label>
         </div>
+        <button class="cta" id="go" disabled>Pagar con tarjeta</button>
+        <p class="hint" id="gohint">Agrega al menos un servicio.</p>
+        <div id="result" hidden></div>
+        <p class="hint"><button type="button" id="salir" class="zoombtn" style="border:0;background:none;color:var(--muted);text-decoration:underline;font-size:12px">No soy yo · salir</button></p>
       </div>
-
-      <div class="opts" role="radiogroup" aria-label="Método de pago">
-        <label class="opt"><input type="radio" name="metodo" value="Tarjeta en línea" checked><span>Tarjeta en línea<small>Te enviamos un enlace de pago seguro con Stripe. Si ya eres cliente, usa el portal de pagos.</small></span></label>
-        <label class="opt"><input type="radio" name="metodo" value="Transferencia o depósito"><span>Transferencia o depósito<small>Te enviamos los datos bancarios y confirmas con el comprobante.</small></span></label>
-        <label class="opt"><input type="radio" name="metodo" value="Efectivo"><span>Efectivo<small>Coordinamos la entrega por WhatsApp.</small></span></label>
-      </div>
-
-      <button class="cta" id="go" disabled>Revisar y enviar solicitud</button>
-      <p class="hint" id="gohint">Agrega al menos un servicio y escribe tu nombre.</p>
-      <div id="result" hidden></div>
     </aside>
   </div>
 </div></section>
@@ -112,50 +131,63 @@
 <script>
 (() => {
 const WA = "18283786106";
-const RD = n => "RD$ " + n.toLocaleString("es-DO",{minimumFractionDigits:2,maximumFractionDigits:2});
+const API = "https://okrfxnhwpdkumaqovfrs.supabase.co/functions/v1/sitio-publico";
+const RD = n => "RD$ " + Number(n).toLocaleString("es-DO",{minimumFractionDigits:2,maximumFractionDigits:2});
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+async function api(accion, datos = {}) {
+  const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ accion, ...datos }) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) { const e = new Error(j.error || "No pudimos completar la solicitud."); e.status = r.status; throw e; }
+  return j;
+}
+const guardar = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (_) {} };
+const leer = k => { try { return localStorage.getItem(k); } catch (_) { return null; } };
+
+// Catálogo público: nombres y descripciones. Los precios llegan del servidor tras verificar.
 const CATS = [
  {id:"sistema", nombre:"Sistema Wise", nota:"Membresía de Wise Medical Kids o GynCare. Al pagarla se extiende también la vigencia de tu licencia.", items:[
-  {k:"membresia_sistema", n:"Membresía del Sistema", d:"Uso del software clínico Wise Medical (Kids o GynCare), soporte y actualizaciones.", p:3000, t:"mes", a:15, s:5},
-  {k:"recordatorio_citas", n:"Recordatorio de Citas WhatsApp", d:"Recordatorios automáticos de citas a tus pacientes.", p:1200, t:"mes", a:10, s:0},
-  {k:"instalacion", n:"Instalación y configuración", d:"Pago único por licencia: instalación, personalización y carga inicial. Se cobra aparte de la membresía.", p:15000, t:"unico"},
-  {k:"implementacion_wmk", n:"Saldo de implementación", d:"Abono al saldo pendiente de la implementación de tu sistema. Escribe el monto acordado.", p:0, t:"abierto"}
+  {k:"membresia_sistema", n:"Membresía del Sistema", d:"Uso del software clínico Wise Medical (Kids o GynCare), soporte y actualizaciones.", t:"mes"},
+  {k:"recordatorio_citas", n:"Recordatorio de Citas WhatsApp", d:"Recordatorios automáticos de citas a tus pacientes.", t:"mes"},
+  {k:"instalacion", n:"Instalación y configuración", d:"Pago único por licencia: instalación, personalización y carga inicial. Se cobra aparte de la membresía.", t:"unico"},
+  {k:"implementacion_wmk", n:"Saldo de implementación", d:"Abono al saldo pendiente de la implementación de tu sistema. Escribe el monto acordado.", t:"abierto"}
  ]},
  {id:"web", nombre:"Sitio web", nota:"La implementación se paga 50 % al iniciar y 50 % antes de la entrega. La administración mensual inicia 30 días después de publicar.", items:[
-  {k:"web_esencial_impl", n:"Sitio Web Esencial · Implementación", d:"Inicio, biografía, formación, especialidades, servicios y contacto. Adaptable a móvil, SSL y SEO básico.", p:28000, t:"unico", mitad:true},
-  {k:"web_esencial_mes", n:"Sitio Web Esencial · Administración", d:"Actualizaciones, respaldos, seguridad y 1 actualización de contenido al mes.", p:3500, t:"mes", a:10, s:5},
-  {k:"creacion_web", n:"Sitio Web Profesional · Implementación", d:"Todo lo Esencial + blog clínico, galería, módulo de Instagram y 2 rondas de ajustes.", p:45000, t:"unico", mitad:true, rec:true},
-  {k:"administracion_web", n:"Sitio Web Profesional · Administración", d:"Hasta 2 publicaciones o actualizaciones al mes. Respuesta en máximo 2 días laborables.", p:4500, t:"mes", a:10, s:5, rec:true},
-  {k:"web_autoridad_impl", n:"Sitio Web Autoridad · Implementación", d:"Todo lo Profesional + páginas por especialidad, formularios avanzados y métricas.", p:68000, t:"unico", mitad:true},
-  {k:"web_autoridad_mes", n:"Sitio Web Autoridad · Administración", d:"Estrategia de contenido, hasta 4 publicaciones al mes, SEO continuo y reporte mensual.", p:7500, t:"mes", a:10, s:5},
-  {k:"web_sin_inicial", n:"Sitio Web sin inversión inicial", d:"RD$ 0 al iniciar; la cuota mensual incluye creación y administración. Permanencia mínima de 18 meses.", p:7500, t:"mes", a:10, s:5, perm:18}
+  {k:"web_esencial_impl", n:"Sitio Web Esencial · Implementación", d:"Inicio, biografía, formación, especialidades, servicios y contacto. Adaptable a móvil, SSL y SEO básico.", t:"mitad"},
+  {k:"web_esencial_mes", n:"Sitio Web Esencial · Administración", d:"Actualizaciones, respaldos, seguridad y 1 actualización de contenido al mes.", t:"mes"},
+  {k:"creacion_web", n:"Sitio Web Profesional · Implementación", d:"Todo lo Esencial + blog clínico, galería, módulo de Instagram y 2 rondas de ajustes.", t:"mitad", rec:true},
+  {k:"administracion_web", n:"Sitio Web Profesional · Administración", d:"Hasta 2 publicaciones o actualizaciones al mes. Respuesta en máximo 2 días laborables.", t:"mes", rec:true},
+  {k:"web_autoridad_impl", n:"Sitio Web Autoridad · Implementación", d:"Todo lo Profesional + páginas por especialidad, formularios avanzados y métricas.", t:"mitad"},
+  {k:"web_autoridad_mes", n:"Sitio Web Autoridad · Administración", d:"Estrategia de contenido, hasta 4 publicaciones al mes, SEO continuo y reporte mensual.", t:"mes"},
+  {k:"web_sin_inicial", n:"Sitio Web sin inversión inicial", d:"Sin pago al iniciar; la cuota mensual incluye creación y administración. Permanencia mínima de 18 meses.", t:"mes", perm:18}
  ]},
  {id:"redes", nombre:"Redes sociales", nota:"Gestión de marca médica por WAMC256. Los planes se cobran mensualmente; los extras de arranque son un pago único.", items:[
-  {k:"posicionamiento_digital", n:"Posicionamiento Digital con Autoridad Médica", d:"Precio especial para doctoras con sistema Wise.", p:3000, t:"mes", a:10, s:0, esp:true},
-  {k:"wamc_presencia", n:"WAMC · Presencia Profesional", d:"2 publicaciones semanales, highlights, gestión de cuenta y reporte básico.", p:4000, t:"mes", a:10, s:0},
-  {k:"wamc_autoridad", n:"WAMC · Autoridad Digital", d:"3 publicaciones semanales, 2 reels + carrusel, estrategia y reporte analítico.", p:6000, t:"mes", a:10, s:0, pop:true},
-  {k:"wamc_dominio", n:"WAMC · Dominio Digital", d:"Perfil verificado, reels y campañas publicitarias con captación activa.", p:9000, t:"mes", a:10, s:0},
-  {k:"wamc_perfil", n:"Creación y diseño de perfil", d:"Configuración y diseño profesional del perfil digital.", p:3000, t:"unico"},
-  {k:"wamc_marca", n:"Paquete de marca", d:"Logotipo profesional, papelería médica y plantillas para redes.", p:4500, t:"unico"}
+  {k:"posicionamiento_digital", n:"Posicionamiento Digital con Autoridad Médica", d:"Plan especial para doctoras con sistema Wise.", t:"mes", esp:true},
+  {k:"wamc_presencia", n:"WAMC · Presencia Profesional", d:"2 publicaciones semanales, highlights, gestión de cuenta y reporte básico.", t:"mes"},
+  {k:"wamc_autoridad", n:"WAMC · Autoridad Digital", d:"3 publicaciones semanales, 2 reels + carrusel, estrategia y reporte analítico.", t:"mes", pop:true},
+  {k:"wamc_dominio", n:"WAMC · Dominio Digital", d:"Perfil verificado, reels y campañas publicitarias con captación activa.", t:"mes"},
+  {k:"wamc_perfil", n:"Creación y diseño de perfil", d:"Configuración y diseño profesional del perfil digital.", t:"unico"},
+  {k:"wamc_marca", n:"Paquete de marca", d:"Logotipo profesional, papelería médica y plantillas para redes.", t:"unico"}
  ]},
  {id:"paquetes", nombre:"Paquetes y otros", nota:"El Plan Presencia Digital Total combina redes, recordatorios y administración web con ahorro frente a contratarlos por separado.", items:[
-  {k:"plan_presencia_total", n:"Plan Presencia Digital Total", d:"Posicionamiento Digital + Recordatorio de Citas + Administración web en una sola cuota.", p:7500, t:"mes", a:10, s:5, rec:true},
-  {k:"miscelaneo", n:"Servicio misceláneo", d:"Tareas puntuales: ajustes, configuraciones, reportes, soporte fuera de plan y otros servicios pequeños. Se paga en línea con tarjeta.", p:20, t:"misc"},
-  {k:"office365", n:"Membresía Office 365", d:"Membresía anual de Office 365 gestionada por WWHS.", p:3000, t:"unico"},
-  {k:"otro", n:"Otro servicio", d:"Servicios puntuales o especiales. Escribe el monto acordado y una breve descripción.", p:0, t:"abierto"}
+  {k:"plan_presencia_total", n:"Plan Presencia Digital Total", d:"Posicionamiento Digital + Recordatorio de Citas + Administración web en una sola cuota.", t:"mes", rec:true},
+  {k:"miscelaneo", n:"Servicio misceláneo", d:"Tareas puntuales: ajustes, configuraciones, reportes, soporte fuera de plan y otros servicios pequeños. Se paga en línea con tarjeta.", t:"misc"},
+  {k:"office365", n:"Membresía Office 365", d:"Membresía anual de Office 365 gestionada por WWHS.", t:"unico"},
+  {k:"otro", n:"Otro servicio", d:"Servicios puntuales o especiales. Escribe el monto acordado y una breve descripción.", t:"abierto"}
  ]}
 ];
 const BYKEY = {}; CATS.forEach(c=>c.items.forEach(i=>BYKEY[i.k]=i));
-let tab = ({"#redes":"redes","#web":"web","#paquetes":"paquetes"})[location.hash] || "sistema";
-let cart = [];
-const $ = s => document.querySelector(s);
-const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
 
-function pct(it,m){ if(it.t!=="mes") return 0; if(m>=12) return it.a||0; if(m>=6) return it.s||0; return 0; }
+let PRECIOS = null, MISC = 20, TOKEN = leer("wwhs_precios"), tab = "sistema", cart = [], leadId = null;
+tab = ({"#redes":"redes","#web":"web","#paquetes":"paquetes"})[location.hash] || tab;
+
+const disponible = it => it.t === "misc" || it.t === "abierto" || (PRECIOS && PRECIOS[it.k]);
+function pct(it,m){ const p=PRECIOS?.[it.k]; if(!p||it.t!=="mes") return 0; if(m>=12) return p.a||0; if(m>=6) return p.s||0; return 0; }
 function calc(ci){
-  const it = BYKEY[ci.k];
-  if(it.t==="mes"){ const sub = it.p*ci.m, d = Math.round(sub*pct(it,ci.m))/100; return {sub, desc:d, tot:sub-d}; }
+  const it = BYKEY[ci.k], p = PRECIOS?.[ci.k]?.p || 0;
+  if(it.t==="mes"){ const sub = p*ci.m, d = Math.round(sub*pct(it,ci.m))/100; return {sub, desc:d, tot:sub-d}; }
   if(it.t==="abierto"){ const v = +ci.monto||0; return {sub:v, desc:0, tot:v}; }
-  const v = it.mitad && ci.mitad!==false ? it.p/2 : it.p; return {sub:v, desc:0, tot:v};
+  const v = it.t==="mitad" && ci.mitad!==false ? p/2 : p; return {sub:v, desc:0, tot:v};
 }
 function periodo(m){
   const hoy = new Date(); const ini = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
@@ -163,90 +195,130 @@ function periodo(m){
   const f = d => d.toLocaleDateString("es-DO",{month:"short",year:"numeric"}).replace(".","");
   return m===1 ? f(ini) : `${f(ini)} – ${f(fin)}`;
 }
+
 function renderTabs(){
   $("#tabs").innerHTML = CATS.map(c=>`<button class="svc-tab" role="tab" aria-selected="${c.id===tab}" data-t="${c.id}">${c.nombre}</button>`).join("");
   const c = CATS.find(c=>c.id===tab);
   $("#catnote").textContent = c.nota;
-  $("#catalog").innerHTML = c.items.map(it=>{
-    const inCart = cart.some(x=>x.k===it.k);
+  $("#catalog").innerHTML = c.items.filter(it => !PRECIOS || disponible(it)).map(it=>{
     const tags = [];
     if(it.rec) tags.push(`<span>Recomendado</span>`);
     if(it.pop) tags.push(`<span>Más popular</span>`);
-    if(it.esp) tags.push(`<span class="c">Precio doctoras Wise</span>`);
-    if(it.t==="mes" && it.a) tags.push(`<span>−${it.s?it.s+" % a 6 meses · ":""}${it.a} % a 12 meses</span>`);
-    if(it.mitad) tags.push(`<span>50 % + 50 %</span>`);
+    if(it.esp) tags.push(`<span class="c">Plan doctoras Wise</span>`);
+    if(it.t==="mitad") tags.push(`<span>50 % + 50 %</span>`);
     if(it.perm) tags.push(`<span class="c">Permanencia ${it.perm} meses</span>`);
-    if(it.t==="misc") return `<div class="svc"><div><h3>${it.n}</h3><p>${it.d}</p><div class="tg"><span>Pago en línea</span><span>US$</span></div></div>
-      <div class="price"><strong class="num">US$ 20.00</strong><small>pago único</small><a class="add" href="#miscelaneo" style="text-decoration:none;color:inherit">Pagar en línea</a></div></div>`;
-    const price = it.t==="abierto" ? `<strong>Monto acordado</strong>` :
-      `<strong class="num">${RD(it.p)}</strong><small>${it.t==="mes"?"al mes":"pago único"}</small>`;
-    return `<div class="svc"><div><h3>${it.n}</h3><p>${it.d}</p>${tags.length?`<div class="tg">${tags.join("")}</div>`:""}</div>
-      <div class="price">${price}<button class="add" data-k="${it.k}" ${inCart?"disabled":""}>${inCart?"Agregado":"Agregar"}</button></div></div>`;
+    let price;
+    if(!PRECIOS){
+      if(it.t==="mes") tags.push(`<span>Descuento por pago semestral o anual</span>`);
+      price = `<small>${it.t==="mes"?"Mensual":it.t==="abierto"?"Monto acordado":"Pago único"}</small><a class="add" href="#precios" style="text-decoration:none;color:inherit">Ver precio</a>`;
+    } else {
+      const P = PRECIOS[it.k];
+      if(it.t==="mes" && P && P.a) tags.push(`<span>−${P.s?P.s+" % a 6 meses · ":""}${P.a} % a 12 meses</span>`);
+      if(it.t==="misc") price = `<strong class="num">US$ ${MISC.toFixed(2)}</strong><small>pago único · tarjeta</small><a class="add" href="#miscelaneo" style="text-decoration:none;color:inherit">Pagar en línea</a>`;
+      else {
+        const inCart = cart.some(x=>x.k===it.k);
+        price = (it.t==="abierto" ? `<strong>Monto acordado</strong>` : `<strong class="num">${RD(P.p)}</strong><small>${it.t==="mes"?"al mes":"pago único"}</small>`)
+          + `<button class="add" data-k="${it.k}" ${inCart?"disabled":""}>${inCart?"Agregado":"Agregar"}</button>`;
+      }
+    }
+    return `<div class="svc"><div><h3>${it.n}</h3><p>${it.d}</p>${tags.length?`<div class="tg">${tags.join("")}</div>`:""}</div><div class="price">${price}</div></div>`;
   }).join("");
 }
+
 function renderCart(){
   $("#count").textContent = cart.length + (cart.length===1?" servicio":" servicios");
   if(!cart.length){ $("#items").innerHTML = `<div class="empty">Aún no agregas servicios.</div>`; }
   else $("#items").innerHTML = cart.map((ci,i)=>{
-    const it = BYKEY[ci.k], r = calc(ci);
+    const it = BYKEY[ci.k], r = calc(ci), p = PRECIOS[ci.k]?.p || 0;
     let ctrl = "";
     if(it.t==="mes"){
       ctrl = `<div class="months" role="group" aria-label="Meses a pagar">` + [1,3,6,12].map(m=>{
-        const p = pct(it,m); return `<button aria-pressed="${ci.m===m}" data-i="${i}" data-m="${m}">${m} ${m===1?"mes":"meses"}${p?`<small>−${p} %</small>`:""}</button>`;}).join("") + `</div>
-        <div class="line"><span>${RD(it.p)} × ${ci.m}</span><b class="num">${RD(r.sub)}</b></div>
+        const x = pct(it,m); return `<button aria-pressed="${ci.m===m}" data-i="${i}" data-m="${m}">${m} ${m===1?"mes":"meses"}${x?`<small>−${x} %</small>`:""}</button>`;}).join("") + `</div>
+        <div class="line"><span>${RD(p)} × ${ci.m}</span><b class="num">${RD(r.sub)}</b></div>
         ${r.desc?`<div class="line disc"><span>Descuento ${pct(it,ci.m)} %</span><b class="num">−${RD(r.desc)}</b></div>`:""}
         <div class="meta">Cubre ${periodo(ci.m)}${it.perm?` · permanencia mínima ${it.perm} meses`:""}</div>`;
     } else if(it.t==="abierto"){
       ctrl = `<input class="field amt num" id="amt-${i}" data-i="${i}" inputmode="decimal" placeholder="Monto en RD$" value="${esc(ci.monto||"")}">
         ${ci.k==="otro"?`<input class="field amt" id="det-${i}" data-d="${i}" placeholder="¿Qué servicio es?" value="${esc(ci.det||"")}">`:""}`;
-    } else if(it.mitad){
+    } else if(it.t==="mitad"){
       ctrl = `<div class="split" role="group" aria-label="Parte a pagar">
         <button aria-pressed="${ci.mitad!==false}" data-i="${i}" data-h="1">50 % inicial</button>
         <button aria-pressed="${ci.mitad===false}" data-i="${i}" data-h="0">100 %</button></div>
-        <div class="line"><span>Total implementación ${RD(it.p)}</span><b class="num">${RD(r.tot)}</b></div>`;
-    } else {
-      ctrl = `<div class="line"><span>Pago único</span><b class="num">${RD(r.tot)}</b></div>`;
-    }
+        <div class="line"><span>Total implementación ${RD(p)}</span><b class="num">${RD(r.tot)}</b></div>`;
+    } else ctrl = `<div class="line"><span>Pago único</span><b class="num">${RD(r.tot)}</b></div>`;
     return `<div class="item"><div class="item-h"><h4>${it.n}</h4><button class="x" data-rm="${i}" aria-label="Quitar ${it.n}">×</button></div>${ctrl}</div>`;
   }).join("");
   const t = cart.reduce((a,ci)=>{const r=calc(ci);a.sub+=r.sub;a.desc+=r.desc;a.tot+=r.tot;return a},{sub:0,desc:0,tot:0});
   $("#totals").innerHTML = cart.length ? `
     <div class="row"><span>Subtotal</span><span>${RD(t.sub)}</span></div>
     ${t.desc?`<div class="row disc"><span>Descuentos por adelantado</span><span>−${RD(t.desc)}</span></div>`:""}
-    <div class="big"><span>Total estimado</span><strong>${RD(t.tot)}</strong></div>
-    <div class="usd">Si pagas desde el exterior, confirmamos el importe en USD antes del pago.</div>` : "";
+    <div class="big"><span>Total</span><strong>${RD(t.tot)}</strong></div>` : "";
   validate();
 }
+const metodo = () => document.querySelector('input[name="metodo"]:checked').value;
 function validate(){
-  const abiertosOk = cart.every(ci=>BYKEY[ci.k].t!=="abierto" || (+ci.monto>0));
-  const nombre = $("#nombre").value.trim();
-  const ok = cart.length && abiertosOk && nombre;
+  const abiertosOk = cart.every(ci=>BYKEY[ci.k].t!=="abierto" || (+ci.monto>=100));
+  const ok = cart.length && abiertosOk;
   $("#go").disabled = !ok;
-  $("#gohint").textContent = ok ? "Se abrirá WhatsApp con tu solicitud lista para enviar." :
-    !cart.length ? "Agrega al menos un servicio." : !abiertosOk ? "Escribe el monto de los servicios con monto acordado." : "Escribe tu nombre.";
+  $("#go").textContent = metodo()==="tarjeta" ? "Pagar con tarjeta" : "Solicitar datos de transferencia";
+  $("#gohint").textContent = ok ? (metodo()==="tarjeta" ? "Te llevaremos a la página segura de pago de Stripe." : "Registraremos tu pedido y te escribiremos por WhatsApp con los datos bancarios.")
+    : !cart.length ? "Agrega al menos un servicio." : "Escribe el monto (mínimo RD$100) de los servicios con monto acordado.";
 }
-function message(){
-  const id = $("#sysid").value.trim().toUpperCase();
-  const metodo = document.querySelector('input[name="metodo"]:checked').value;
-  const L = ["Hola, WandyWise Health Systems. Deseo contratar o pagar estos servicios:", "", `Especialista: ${$("#nombre").value.trim()}`];
-  if($("#tel").value.trim()) L.push(`WhatsApp: ${$("#tel").value.trim()}`);
-  if(id) L.push(`ID de sistema: ${id}`);
-  L.push("");
-  let tot = 0, desc = 0;
-  cart.forEach((ci,n)=>{
-    const it = BYKEY[ci.k], r = calc(ci); tot += r.tot; desc += r.desc;
-    let d = "";
-    if(it.t==="mes") d = ` — ${ci.m} ${ci.m===1?"mes":"meses"} (${periodo(ci.m)})${r.desc?`, desc. ${pct(it,ci.m)} %`:""}`;
-    else if(it.mitad) d = ci.mitad!==false ? " — 50 % inicial" : " — 100 %";
-    else if(ci.k==="otro" && ci.det) d = ` — ${ci.det}`;
-    L.push(`${n+1}. ${it.n}${d}: ${RD(r.tot)}`);
-  });
-  L.push("");
-  if(desc) L.push(`Descuentos: −${RD(desc)}`);
-  L.push(`TOTAL: ${RD(tot)}`, `Método: ${metodo}`, "", "Quedo a la espera de la confirmación.");
-  return L.join("\n");
+
+// ── Estado: bloqueado / desbloqueado ───────────────────────
+function desbloquear(r){
+  PRECIOS = r.precios; MISC = r.misc_usd || 20;
+  $("#gate").hidden = true; $("#cartbox").hidden = false;
+  $("#miscelaneo").hidden = false; $("#terms").hidden = false;
+  $("#misc-usd").textContent = MISC;
+  $("#hola").textContent = r.nombre ? `Hola, ${r.nombre}. Ya puedes ver los precios.` : "";
+  $("#cat-sub").textContent = "Precios estándar en RD$. Si acordaste una tarifa distinta, se respeta en tu recibo.";
+  renderTabs(); renderCart();
 }
-document.addEventListener("click", e=>{
+function bloquear(){
+  PRECIOS = null; TOKEN = null; guardar("wwhs_precios", null); cart = [];
+  $("#gate").hidden = false; $("#cartbox").hidden = true; $("#miscelaneo").hidden = true; $("#terms").hidden = true;
+  $("#cat-sub").textContent = "Conoce cada servicio. Los precios se muestran al registrarte.";
+  renderTabs();
+}
+const gmsg = (t, ok) => { const m = $("#gate-msg"); m.hidden = !t; m.className = "fmsg " + (ok ? "ok" : "err"); m.textContent = t || ""; };
+
+// Registro → código por SMS
+let ultimoRegistro = null;
+async function enviarCodigo(datos){
+  const btn = $("#f-reg button[type=submit]"); btn.disabled = true; btn.textContent = "Enviando…"; gmsg("");
+  try {
+    const r = await api("precios_registro", datos);
+    leadId = r.lead_id; ultimoRegistro = datos;
+    $("#tel-mask").textContent = r.telefono || datos.telefono;
+    $("#f-reg").hidden = true; $("#f-code").hidden = false; $("#f-code [name=codigo]").focus();
+    gmsg("Te enviamos el código por SMS. Puede tardar unos segundos.", true);
+  } catch (e) { gmsg(e.message); }
+  btn.disabled = false; btn.textContent = "Enviarme el código";
+}
+$("#f-reg").addEventListener("submit", e => {
+  e.preventDefault(); const f = e.target;
+  if (!f.reportValidity()) return;
+  const d = Object.fromEntries(new FormData(f)); enviarCodigo(d);
+});
+$("#f-code").addEventListener("submit", async e => {
+  e.preventDefault(); const f = e.target;
+  if (!f.reportValidity()) return;
+  const b = f.querySelector("button[type=submit]"); b.disabled = true; b.textContent = "Verificando…";
+  try {
+    const r = await api("precios_verificar", { lead_id: leadId, codigo: f.codigo.value });
+    TOKEN = r.token; guardar("wwhs_precios", TOKEN); gmsg("");
+    desbloquear(r);
+    document.getElementById("catalogo").scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch (err) { gmsg(err.message); }
+  b.disabled = false; b.textContent = "Ver precios";
+});
+$("#re-send").addEventListener("click", () => ultimoRegistro && api("precios_registro", ultimoRegistro).then(() => gmsg("Te enviamos un código nuevo.", true)).catch(e => gmsg(e.message)));
+$("#re-edit").addEventListener("click", () => { $("#f-code").hidden = true; $("#f-reg").hidden = false; gmsg(""); });
+$("#salir").addEventListener("click", bloquear);
+
+// Carrito
+document.addEventListener("click", async e=>{
   const b = e.target.closest("button"); if(!b || !b.closest(".shop")) return;
   if(b.dataset.t){ tab=b.dataset.t; renderTabs(); }
   else if(b.dataset.k){ cart.push({k:b.dataset.k, m:1, mitad:true}); renderTabs(); renderCart(); $("#result").hidden=true; }
@@ -254,24 +326,75 @@ document.addEventListener("click", e=>{
   else if(b.dataset.m){ cart[+b.dataset.i].m=+b.dataset.m; renderCart(); $("#result").hidden=true; }
   else if(b.dataset.h){ cart[+b.dataset.i].mitad = b.dataset.h==="1"; renderCart(); $("#result").hidden=true; }
   else if(b.id==="go"){
-    const msg = message(), r = $("#result");
-    r.innerHTML = `<div class="result"><pre id="msg">${esc(msg)}</pre><div class="acts">
-      <a class="wa" href="https://wa.me/${WA}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">Abrir en WhatsApp</a>
-      <button class="cp" id="copy">Copiar texto</button></div></div>`;
-    r.hidden=false;
+    const m = metodo(); b.disabled = true; const txt0 = b.textContent; b.textContent = m==="tarjeta" ? "Abriendo el pago seguro…" : "Registrando tu pedido…";
+    try {
+      const r = await api("pedido_checkout", { token: TOKEN, metodo: m, codigo_sistema: $("#sysid").value, return_url: location.origin + location.pathname,
+        seleccion: cart.map(c=>({k:c.k, m:c.m, mitad:c.mitad, monto:c.monto, det:c.det})) });
+      if (m === "tarjeta") { location.href = r.url; return; }
+      const L = [`Hola, WandyWise Health Systems. Registré el pedido ${r.referencia} y deseo pagarlo por transferencia. ¿Me envían los datos bancarios?`, ""];
+      r.items.forEach((it,n)=>L.push(`${n+1}. ${it.nombre} — ${it.detalle}: ${RD(it.total_rd)}`));
+      L.push("", r.descuento_rd>0 ? `Descuentos: −${RD(r.descuento_rd)}` : "", `TOTAL: ${RD(r.total_rd)}`);
+      const msg = L.filter((x,i,a)=>x!==""||a[i-1]!=="").join("\n");
+      $("#result").innerHTML = `<div class="result"><p style="margin:0 0 10px"><b>Pedido ${esc(r.referencia)} registrado.</b> Envíanos este mensaje por WhatsApp y te respondemos con los datos para la transferencia.</p><pre id="msg">${esc(msg)}</pre><div class="acts">
+        <a class="wa" href="https://wa.me/${WA}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+        <button class="cp" id="copy">Copiar texto</button></div></div>`;
+      $("#result").hidden = false;
+    } catch (err) {
+      if (err.status === 401) { bloquear(); gmsg(err.message); document.getElementById("precios").scrollIntoView({behavior:"smooth"}); }
+      else { $("#result").innerHTML = `<div class="fmsg err">${esc(err.message)}</div>`; $("#result").hidden = false; }
+    }
+    b.disabled = false; b.textContent = txt0; validate();
   }
-  else if(b.id==="copy"){
-    navigator.clipboard?.writeText($("#msg").textContent).then(()=>b.textContent="Copiado").catch(()=>b.textContent="Selecciona y copia el texto");
-  }
+  else if(b.id==="copy"){ navigator.clipboard?.writeText($("#msg").textContent).then(()=>b.textContent="Copiado").catch(()=>b.textContent="Selecciona y copia el texto"); }
 });
 document.addEventListener("input", e=>{
-  const el=e.target; if(!el.closest(".shop")) return;
+  const el=e.target; if(!el.closest("#cartbox")) return;
   if(el.id && el.id.startsWith("amt-")){ cart[+el.dataset.i].monto = el.value.replace(/[^\d.]/g,""); const pos=el.selectionStart; renderCart(); const n=document.getElementById(el.id); n.focus(); try{n.setSelectionRange(pos,pos)}catch(_){} }
   else if(el.dataset.d!==undefined){ cart[+el.dataset.d].det = el.value; }
-  else validate();
   $("#result").hidden=true;
 });
-renderTabs(); renderCart();
+document.addEventListener("change", e => { if (e.target.name === "metodo") { validate(); $("#result").hidden = true; } });
+
+// Servicio misceláneo
+$("#f-misc").addEventListener("submit", async e => {
+  e.preventDefault(); const f = e.target; if (!f.reportValidity()) return;
+  const btn = f.querySelector("button[type=submit]"), msg = $("#misc-msg");
+  btn.disabled = true; btn.textContent = "Abriendo el pago seguro…"; msg.hidden = true;
+  try {
+    const { url } = await api("misc_checkout", { token: TOKEN, descripcion: f.descripcion.value, return_url: location.origin + location.pathname });
+    location.href = url;
+  } catch (err) {
+    if (err.status === 401) { bloquear(); gmsg(err.message); }
+    msg.className = "fmsg err"; msg.textContent = err.message; msg.hidden = false;
+    btn.disabled = false; btn.textContent = `Pagar US$${MISC} con tarjeta`;
+  }
+});
+
+// Regreso desde Stripe
+(() => {
+  const q = new URLSearchParams(location.search), ban = $("#ret-banner");
+  const sid = q.get("pedido") || q.get("misc");
+  if (sid) {
+    ban.hidden = false; ban.className = "banner warn"; ban.textContent = "Confirmando tu pago…";
+    api(q.get("pedido") ? "pedido_estado" : "misc_estado", { session_id: sid }).then(r => {
+      if (r.estado === "pagado") {
+        const x = r.resultado; ban.className = "banner ok";
+        ban.innerHTML = x.tipo === "misc"
+          ? `<b>¡Pago recibido!</b> Registramos tu pago de US$${Number(x.monto_usd).toFixed(2)} por el servicio misceláneo. Te contactaremos por WhatsApp para coordinarlo. Stripe te envía el recibo por correo.`
+          : `<b>¡Pago recibido!</b> Tu pedido ${esc(x.referencia)} por ${RD(x.total_rd)} quedó pagado. Te contactaremos por WhatsApp para coordinar los servicios. Stripe te envía el recibo por correo.`;
+      } else if (r.estado === "pendiente") ban.textContent = "Tu pago se está procesando. Te avisaremos cuando se confirme.";
+      else ban.textContent = "No pudimos confirmar el pago. Si se cobró, escríbenos por WhatsApp y lo revisamos.";
+    }).catch(() => { ban.textContent = "No pudimos confirmar el pago. Escríbenos por WhatsApp y lo revisamos."; });
+    history.replaceState(null, "", location.pathname);
+  } else if (q.get("cancelado")) {
+    ban.hidden = false; ban.className = "banner warn"; ban.textContent = "Cancelaste el pago. No se hizo ningún cargo.";
+    history.replaceState(null, "", location.pathname);
+  }
+})();
+
+// Inicio: si ya se verificó antes en este navegador, muestra los precios
+renderTabs();
+if (TOKEN) api("precios_catalogo", { token: TOKEN }).then(desbloquear).catch(err => { if (err.status === 401) bloquear(); });
 })();
 </script>
 
@@ -304,6 +427,6 @@ renderTabs(); renderCart();
   <div class="legalrow"><span>© <span id="year">2026</span> WandyWise Health Systems · República Dominicana <span class="visits" hidden>· <b id="visitas">—</b> visitas</span></span><span><a href="/privacidad/">Privacidad</a> · <a href="/aviso-medico/">Aviso médico</a></span></div>
 </div></footer>
 <a class="wa-float" href="https://wa.me/18283786106?text=Hola%2C%20WandyWise%20Health%20Systems.%20Deseo%20informaci%C3%B3n." target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3a.4.4 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4 5.2 5.2 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg><span>WhatsApp</span></a>
-<script src="/assets/site.js?v=20260925" defer></script>
+<script src="/assets/site.js?v=20260925b" defer></script>
 </body>
 </html>
