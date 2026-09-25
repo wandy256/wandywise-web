@@ -103,34 +103,62 @@ $$("[data-switch]").forEach(g => {
   }));
 });
 
-// Carruseles con avance automático
+// Carruseles automáticos y fluidos
+//   data-carousel="marquee" data-speed="px/seg"  → desplazamiento continuo
+//   data-carousel="slide"   data-interval="ms"    → pasa de uno en uno con transición suave
 $$("[data-carousel]").forEach(c => {
-  const track = $(".track", c), slides = $$(".slide", track), dots = $(".dots", c);
-  const auto = +(c.dataset.carousel || 0);
-  const porVista = () => Math.max(1, Math.round(track.clientWidth / (slides[0]?.getBoundingClientRect().width || track.clientWidth)));
-  const paginas = () => Math.max(1, slides.length - porVista() + 1);
-  let i = 0, timer = null, pausa = false;
-  const ir = n => {
-    i = (n + paginas()) % paginas();
-    track.scrollTo({ left: slides[i].offsetLeft - track.offsetLeft, behavior: reduce ? "auto" : "smooth" });
-    pintar();
-  };
-  const pintar = () => { if (!dots) return; dots.innerHTML = Array.from({ length: paginas() }, (_, k) => `<button type="button" aria-label="Ir a ${k + 1}" ${k === i ? 'aria-current="true"' : ""}></button>`).join(""); };
-  dots?.addEventListener("click", e => { const b = e.target.closest("button"); if (b) { ir([...dots.children].indexOf(b)); reiniciar(); } });
-  $$("[data-dir]", c).forEach(b => b.addEventListener("click", () => { ir(i + +b.dataset.dir); reiniciar(); }));
-  track.addEventListener("scroll", () => {
-    clearTimeout(track._t);
-    track._t = setTimeout(() => {
-      const x = track.scrollLeft; let best = 0;
-      slides.forEach((s, k) => { if (Math.abs(s.offsetLeft - track.offsetLeft - x) < Math.abs(slides[best].offsetLeft - track.offsetLeft - x)) best = k; });
-      if (best !== i) { i = Math.min(best, paginas() - 1); pintar(); }
-    }, 120);
-  }, { passive: true });
-  const reiniciar = () => { clearInterval(timer); if (auto && !reduce) timer = setInterval(() => { if (!pausa && !document.hidden) ir(i + 1); }, auto); };
-  c.addEventListener("mouseenter", () => pausa = true); c.addEventListener("mouseleave", () => pausa = false);
-  c.addEventListener("focusin", () => pausa = true); c.addEventListener("focusout", () => pausa = false);
-  addEventListener("resize", () => { i = Math.min(i, paginas() - 1); pintar(); });
-  pintar(); reiniciar();
+  const vp = $(".track", c), dots = $(".dots", c);
+  const modo = c.dataset.carousel === "marquee" ? "marquee" : "slide";
+  vp.classList.add("vp");
+  const rail = document.createElement("div"); rail.className = "rail";
+  while (vp.firstChild) rail.appendChild(vp.firstChild);
+  vp.appendChild(rail);
+  const originales = $$(".slide", rail);
+  let pausa = false, arrastre = null, movido = false;
+  const gap = () => parseFloat(getComputedStyle(rail).columnGap || getComputedStyle(rail).gap) || 0;
+  const paso = () => (originales[0]?.getBoundingClientRect().width || vp.clientWidth) + gap();
+  ["mouseenter", "focusin"].forEach(ev => c.addEventListener(ev, () => pausa = true));
+  ["mouseleave", "focusout"].forEach(ev => c.addEventListener(ev, () => pausa = false));
+
+  if (modo === "marquee") {
+    // Duplica las diapositivas para un bucle continuo sin saltos
+    originales.forEach(s => { const k = s.cloneNode(true); k.setAttribute("aria-hidden", "true"); $$("a,button,img", k).forEach(n => n.setAttribute("tabindex", "-1")); rail.appendChild(k); });
+    if (dots) dots.remove();
+    const vel = +(c.dataset.speed || 40);
+    let x = 0, prev = performance.now(), anim = null;
+    const ancho = () => originales.reduce((t, s) => t + s.getBoundingClientRect().width, 0) + gap() * originales.length;
+    const aplicar = () => { const w = ancho(); if (w) { x = ((x % w) + w) % w; } rail.style.transform = `translate3d(${-x}px,0,0)`; };
+    const tick = t => {
+      const dt = Math.min(64, t - prev); prev = t;
+      if (anim) { const k = Math.min(1, (t - anim.t0) / 450), e = 1 - Math.pow(1 - k, 3); x = anim.de + (anim.a - anim.de) * e; if (k >= 1) anim = null; }
+      else if (!pausa && !arrastre && !reduce && !document.hidden) x += vel * dt / 1000;
+      aplicar(); requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+    $$("[data-dir]", c).forEach(b => b.addEventListener("click", () => { anim = { de: x, a: x + paso() * +b.dataset.dir, t0: performance.now() }; }));
+    vp.addEventListener("pointerdown", e => { arrastre = { x0: e.clientX, base: x }; movido = false; });
+    addEventListener("pointermove", e => { if (!arrastre) return; const d = e.clientX - arrastre.x0; if (Math.abs(d) > 6) movido = true; x = arrastre.base - d; });
+    addEventListener("pointerup", () => { arrastre = null; });
+  } else {
+    let i = 0, timer = null;
+    const n = originales.length;
+    const ir = k => {
+      i = (k + n) % n;
+      rail.style.transform = `translate3d(${-i * paso()}px,0,0)`;
+      if (dots) dots.innerHTML = originales.map((_, j) => `<button type="button" aria-label="Ir a ${j + 1}" ${j === i ? 'aria-current="true"' : ""}></button>`).join("");
+    };
+    const reiniciar = () => { clearInterval(timer); if (!reduce) timer = setInterval(() => { if (!pausa && !arrastre && !document.hidden) ir(i + 1); }, +(c.dataset.interval || 4500)); };
+    dots?.addEventListener("click", e => { const b = e.target.closest("button"); if (b) { ir([...dots.children].indexOf(b)); reiniciar(); } });
+    $$("[data-dir]", c).forEach(b => b.addEventListener("click", () => { ir(i + +b.dataset.dir); reiniciar(); }));
+    vp.addEventListener("pointerdown", e => { arrastre = { x0: e.clientX }; movido = false; rail.style.transition = "none"; });
+    addEventListener("pointermove", e => { if (!arrastre) return; const d = e.clientX - arrastre.x0; if (Math.abs(d) > 6) movido = true; rail.style.transform = `translate3d(${-i * paso() + d}px,0,0)`; });
+    addEventListener("pointerup", e => { if (!arrastre) return; const d = e.clientX - arrastre.x0; arrastre = null; rail.style.transition = ""; ir(Math.abs(d) > 50 ? i - Math.sign(d) : i); reiniciar(); });
+    addEventListener("resize", () => ir(i));
+    ir(0); reiniciar();
+  }
+  // Un arrastre no debe abrir la imagen
+  vp.addEventListener("click", e => { if (movido) { e.stopPropagation(); e.preventDefault(); movido = false; } }, true);
+  vp.addEventListener("dragstart", e => e.preventDefault());
 });
 
 // Visor de imágenes ampliadas
@@ -219,43 +247,4 @@ if (val) {
     }
     msg.hidden = false; btn.disabled = false;
   });
-}
-
-// Servicio misceláneo (US$20): pago con tarjeta
-const misc = $("#f-misc");
-if (misc) {
-  const msg = $("#misc-msg"), btn = $("button[type=submit]", misc);
-  misc.addEventListener("submit", async e => {
-    e.preventDefault();
-    if (!misc.reportValidity()) return;
-    const f = new FormData(misc);
-    btn.disabled = true; btn.textContent = "Abriendo el pago seguro…"; msg.hidden = true;
-    try {
-      const { url } = await api("misc_checkout", {
-        nombre: f.get("nombre"), whatsapp: f.get("whatsapp"), email: f.get("email"),
-        descripcion: f.get("descripcion"), return_url: location.origin + location.pathname,
-      });
-      location.href = url;
-    } catch (err) {
-      msg.className = "fmsg err"; msg.textContent = err.message; msg.hidden = false;
-      btn.disabled = false; btn.textContent = "Pagar US$20 con tarjeta";
-    }
-  });
-  // Regreso desde Stripe
-  const q = new URLSearchParams(location.search), ban = $("#misc-banner");
-  if (q.get("misc") && ban) {
-    ban.hidden = false; ban.className = "banner warn"; ban.textContent = "Confirmando tu pago…";
-    api("misc_estado", { session_id: q.get("misc") }).then(r => {
-      if (r.estado === "pagado") {
-        ban.className = "banner ok";
-        ban.innerHTML = `<b>¡Pago recibido!</b> Registramos tu pago de US$${Number(r.resultado.monto_usd).toFixed(2)} por el servicio misceláneo (“${esc(r.resultado.descripcion)}”). Te contactaremos por WhatsApp para coordinarlo. Stripe te envía el recibo por correo.`;
-      } else if (r.estado === "pendiente") {
-        ban.textContent = "Tu pago se está procesando. Te avisaremos cuando se confirme.";
-      } else { ban.className = "banner warn"; ban.textContent = "No pudimos confirmar el pago. Si se cobró, escríbenos por WhatsApp y lo revisamos."; }
-    }).catch(() => { ban.textContent = "No pudimos confirmar el pago. Escríbenos por WhatsApp y lo revisamos."; });
-    history.replaceState(null, "", location.pathname + "#miscelaneo");
-  } else if (q.get("cancelado") && ban) {
-    ban.hidden = false; ban.className = "banner warn"; ban.textContent = "Cancelaste el pago. No se hizo ningún cargo.";
-    history.replaceState(null, "", location.pathname + "#miscelaneo");
-  }
 }

@@ -428,9 +428,12 @@ textarea.field{min-height:96px;resize:vertical}
 
 /* ===================== Carruseles ===================== */
 .car{position:relative}
-.car .track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding-bottom:4px}
-.car .track::-webkit-scrollbar{display:none}
-.car .slide{flex:0 0 var(--w,100%);scroll-snap-align:start;min-width:0}
+.car .vp{overflow:hidden;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.car .vp:active{cursor:grabbing}
+.car .rail{display:flex;gap:16px;will-change:transform;transition:transform .9s cubic-bezier(.22,.8,.2,1)}
+.car[data-carousel="marquee"] .rail{transition:none}
+.car .slide{flex:0 0 var(--w,100%);min-width:0}
+.car img{-webkit-user-drag:none}
 .car .ctl{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap}
 .car .dots{display:flex;gap:6px;flex-wrap:wrap}
 .car .dots button{width:9px;height:9px;border-radius:50%;border:0;background:var(--line);padding:0;cursor:pointer}
