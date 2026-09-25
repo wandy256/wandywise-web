@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=20260924">
+<link rel="stylesheet" href="/assets/site.css?v=20260925">
 </head>
 <body>
 <div class="strip"><div class="wrap">
@@ -39,11 +39,27 @@
     <div class="btns"><a class="btn primary" href="#demo">Solicitar una demostración</a><a class="btn ghost" href="#sistemas">Conocer los sistemas ↓</a></div>
     <ul class="tags"><li>Pediatría</li><li>Neonatología</li><li>Nutrición infantil</li><li>Ginecología y obstetricia</li></ul>
   </div>
-  <div class="stack reveal">
-    <div class="frame"><div class="bar"><i></i><i></i><i></i><span>Wise Medical Kids · acceso personalizado</span></div>
-      <img src="/img/kids/acceso-personalizado.webp" alt="Pantalla de acceso personalizada de Wise Medical Kids" width="1600" height="854"></div>
-    <div class="float f2"><span style="color:var(--muted)">Curvas de crecimiento</span><b>OMS · CDC · Fenton</b></div>
-    <div class="float f1"><span style="color:var(--muted)">Pagos en línea</span><b>Renueva con tu ID</b></div>
+  <div class="reveal">
+    <div class="mock" id="hero-mock" data-anim role="img" aria-label="Panel clínico de muestra de Wise Medical">
+      <div class="mbar"><span class="mlogo">W</span><b data-kids="Wise Medical Kids" data-gyn="Wise Medical GynCare">Wise Medical Kids</b><span class="av">WA</span></div>
+      <div class="mbody">
+        <div class="mside"><span class="on">Panel clínico</span><span>Agenda</span><span>Pacientes</span><span data-kids="Crecimiento" data-gyn="Embarazos">Crecimiento</span><span>Recetas</span><span>Cobros</span></div>
+        <div class="mmain">
+          <p class="hello">Buenas tardes, Dra.<small>Agenda de hoy</small></p>
+          <div class="stats">
+            <div class="stat"><span>Citas hoy</span><b data-count="8" data-pad="2">00</b></div>
+            <div class="stat"><span>Pacientes</span><b data-count="126">0</b></div>
+            <div class="stat"><span>Esta semana</span><b data-count="32">0</b></div>
+          </div>
+          <div class="chart"><div class="ch"><span>Consultas · últimos 7 días</span><b>32 total</b></div>
+            <div class="bars"><i style="--h:55%"></i><i style="--h:80%"></i><i style="--h:62%"></i><i style="--h:95%"></i><i style="--h:70%"></i><i style="--h:35%"></i><i style="--h:12%"></i></div>
+            <div class="days"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div></div>
+          <div><p class="k" style="margin:0 0 6px;font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.1em">ACCESOS RÁPIDOS</p>
+          <div class="quick"><span>Nueva consulta</span><span>Crear cita</span><span>Historia clínica</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="sw" data-switch="#hero-mock" role="group" aria-label="Ver sistema"><button type="button" data-v="kids" aria-pressed="true">Wise Medical Kids</button><button type="button" data-v="gyn" aria-pressed="false">Wise Medical GynCare</button></div>
   </div>
 </div></section>
 
@@ -52,7 +68,12 @@
   <p class="lede">No adaptamos tu consulta a un programa genérico. Creamos flujos especializados para que la tecnología acompañe tu criterio clínico.</p></div>
   <div class="systems">
     <article class="sys">
-      <div class="shot"><img src="/img/kids/curvas-crecimiento.webp" alt="Curvas de crecimiento en Wise Medical Kids" loading="lazy" width="1600" height="859"></div>
+      <div class="mockwrap"><div class="mock pcard" data-anim role="img" aria-label="Ficha de paciente de muestra en Wise Medical Kids">
+        <div class="who"><span class="pav">LM</span><div><b>Lucía Martínez</b><small>Paciente · 2 años</small></div><span class="pill">Activo</span></div>
+        <div class="curve"><div class="ch"><span>Crecimiento y desarrollo</span><span>Percentil</span></div>
+          <svg viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true"><path class="band" d="M0 92 C80 70 160 40 300 18 L300 38 C160 58 80 84 0 98Z"/><path class="p" d="M0 98 C80 80 160 55 300 36"/><path class="p" d="M0 90 C80 66 160 36 300 14"/><path class="line" d="M6 94 C60 80 110 66 150 54 S240 32 290 26"/><circle class="dot" cx="290" cy="26" r="5"/></svg></div>
+        <div class="kv"><div><span>Peso</span><b><span data-count="12.4" data-dec="1">0</span> kg</b></div><div><span>Talla</span><b><span data-count="88">0</span> cm</b></div><div><span>Próxima vacuna</span><b>08 Ago</b></div></div>
+      </div></div>
       <div class="body">
         <img class="brand" src="/img/marca/wise-medical-kids.webp" alt="Wise Medical Kids" width="900" height="714">
         <p class="eyebrow" style="margin:0">Pediatría y neonatología</p>
@@ -63,7 +84,11 @@
       </div>
     </article>
     <article class="sys gyn">
-      <div class="shot"><img src="/img/marca/gyncare-panel.webp" alt="Panel principal de Wise Medical GynCare" loading="lazy" width="1500" height="844"></div>
+      <div class="mockwrap"><div class="mock gyn pcard" data-anim role="img" aria-label="Seguimiento de embarazo de muestra en Wise Medical GynCare">
+        <div class="who"><span class="pav" style="background:var(--rose-pale);color:var(--rose)">AR</span><div><b>Embarazo activo</b><small>Seguimiento obstétrico</small></div><span class="pill">Al día</span></div>
+        <div class="preg"><div class="ring" data-p="61"><b>24+3</b></div><div><small>Edad gestacional</small><div class="wk">Semana 24 + 3 días</div><small>FPP · 02 NOV 2026</small></div></div>
+        <div class="kv"><div><span>Peso actual</span><b><span data-count="68.2" data-dec="1">0</span> kg</b></div><div><span>Próximo control</span><b>Mié 10:30</b></div><div><span>Controles</span><b data-count="6">0</b></div></div>
+      </div></div>
       <div class="body">
         <img class="brand" src="/img/marca/gyncare.webp" alt="Wise Medical GynCare" width="900" height="537">
         <p class="eyebrow" style="margin:0;color:var(--rose)">Ginecología y obstetricia</p>
@@ -101,14 +126,19 @@
 <section class="block alt" id="especialistas"><div class="wrap">
   <div class="head"><p class="eyebrow">Comunidad Wise Medical Kids</p><h2 class="title">Especialistas que confían su gestión clínica a Wise.</h2>
   <p class="lede">Profesionales de distintas áreas de la pediatría utilizan Wise Medical Kids para organizar su consulta, mantener continuidad en el seguimiento y trabajar con información disponible cuando la necesitan.</p></div>
-  <div class="spot">
-    <figure><img src="/img/clientes/lucrecia-mercado.webp" alt="Logotipo de la Dra. Lucrecia Mercado" loading="lazy" width="900" height="695"></figure>
-    <div>
-      <p class="eyebrow" style="margin-bottom:6px">Wise Medical Kids</p>
-      <h3>Dra. Lucrecia Mercado</h3>
-      <p class="role">Pediatra · Puericultora · Prolactancia</p>
-      <p class="k">Enfoque de uso</p><p class="v">Puericultura, crecimiento y acompañamiento familiar.</p>
+  <div class="car spec" data-carousel="4000">
+    <div class="track">
+      <div class="slide"><div class="spot">
+        <figure><img src="/img/clientes/lucrecia-mercado.webp" alt="Logotipo de la Dra. Lucrecia Mercado" loading="lazy" width="900" height="695"></figure>
+        <div><p class="eyebrow" style="margin-bottom:6px">Wise Medical Kids</p><h3>Dra. Lucrecia Mercado</h3><p class="role">Pediatra · Puericultora · Prolactancia</p>
+        <p class="k">Enfoque de uso</p><p class="v">Puericultura, crecimiento y acompañamiento familiar.</p></div>
+      </div></div>
+      <div class="slide"><div class="spot">
+        <figure><img src="/img/clientes/yessenia-morel.webp" alt="Logotipo de la Dra. Yassenia Altagracia Morel" loading="lazy" width="900" height="427"></figure>
+        <div><p class="eyebrow" style="margin-bottom:6px">Wise Medical Kids</p><h3>Dra. Yassenia Altagracia Morel</h3><p class="role">Pediatra Neonatóloga</p></div>
+      </div></div>
     </div>
+    <div class="ctl"><div class="dots"></div><div class="nav2"><span class="auto">Cambio automático</span><button type="button" data-dir="-1" aria-label="Anterior">←</button><button type="button" data-dir="1" aria-label="Siguiente">→</button></div></div>
   </div>
   <div class="benefits">
     <div><h3>Registro más ágil</h3><p>Historias, consultas, indicaciones y seguimientos dentro de un flujo organizado.</p></div>
@@ -121,7 +151,8 @@
 <section class="block" id="galeria"><div class="wrap">
   <div class="head"><p class="eyebrow">Una solución, distintas consultas</p><h2 class="title">Sistemas que se sienten propios desde el primer acceso.</h2>
   <p class="lede">Wise Medical Kids y GynCare se adaptan a la identidad y al flujo de trabajo de cada especialista.</p></div>
-  <div class="thumbs"><figure><img src="/img/accesos/acceso-1.webp" alt="Pantalla de acceso personalizada de Wise Medical Kids, versión 1" loading="lazy" width="1400" height="746"></figure><figure><img src="/img/accesos/acceso-2.webp" alt="Pantalla de acceso personalizada de Wise Medical Kids, versión 2" loading="lazy" width="1400" height="746"></figure><figure><img src="/img/accesos/acceso-3.webp" alt="Pantalla de acceso personalizada de Wise Medical Kids, versión 3" loading="lazy" width="1400" height="746"></figure><figure><img src="/img/accesos/acceso-4.webp" alt="Pantalla de acceso personalizada de Wise Medical Kids, versión 4" loading="lazy" width="1400" height="746"></figure><figure><img src="/img/accesos/acceso-5.webp" alt="Pantalla de acceso personalizada de Wise Medical Kids, versión 5" loading="lazy" width="1400" height="746"></figure><figure><img src="/img/accesos/acceso-6.webp" alt="Pantalla de acceso personalizada de Wise Medical Kids, versión 6" loading="lazy" width="1400" height="746"></figure><figure><img src="/img/accesos/acceso-7.webp" alt="Pantalla de acceso personalizada de Wise Medical Kids, versión 7" loading="lazy" width="1400" height="746"></figure></div>
+  <div class="car accesos" data-carousel="3500"><div class="track"><div class="slide"><figure><img class="zoom" data-zoom="accesos" src="/img/accesos/acceso-1.webp" alt="Acceso personalizado de Wise Medical Kids · consulta 01" loading="lazy" width="1400" height="746"><figcaption>01 · Wise Medical Kids</figcaption></figure></div><div class="slide"><figure><img class="zoom" data-zoom="accesos" src="/img/accesos/acceso-2.webp" alt="Acceso personalizado de Wise Medical Kids · consulta 02" loading="lazy" width="1400" height="746"><figcaption>02 · Wise Medical Kids</figcaption></figure></div><div class="slide"><figure><img class="zoom" data-zoom="accesos" src="/img/accesos/acceso-3.webp" alt="Acceso personalizado de Wise Medical Kids · consulta 03" loading="lazy" width="1400" height="746"><figcaption>03 · Wise Medical Kids</figcaption></figure></div><div class="slide"><figure><img class="zoom" data-zoom="accesos" src="/img/accesos/acceso-4.webp" alt="Acceso personalizado de Wise Medical Kids · consulta 04" loading="lazy" width="1400" height="746"><figcaption>04 · Wise Medical Kids</figcaption></figure></div><div class="slide"><figure><img class="zoom" data-zoom="accesos" src="/img/accesos/acceso-5.webp" alt="Acceso personalizado de Wise Medical Kids · consulta 05" loading="lazy" width="1400" height="746"><figcaption>05 · Wise Medical Kids</figcaption></figure></div><div class="slide"><figure><img class="zoom" data-zoom="accesos" src="/img/accesos/acceso-6.webp" alt="Acceso personalizado de Wise Medical Kids · consulta 06" loading="lazy" width="1400" height="746"><figcaption>06 · Wise Medical Kids</figcaption></figure></div><div class="slide"><figure><img class="zoom" data-zoom="accesos" src="/img/accesos/acceso-7.webp" alt="Acceso personalizado de Wise Medical Kids · consulta 07" loading="lazy" width="1400" height="746"><figcaption>07 · Wise Medical Kids</figcaption></figure></div><div class="slide"><figure><img class="zoom" data-zoom="accesos" src="/img/marca/gyncare-panel.webp" alt="Panel principal de Wise Medical GynCare" loading="lazy" width="1500" height="844"><figcaption>08 · Wise Medical GynCare</figcaption></figure></div></div>
+    <div class="ctl"><div class="dots"></div><div class="nav2"><span class="auto">Toca una imagen para ampliarla</span><button type="button" data-dir="-1" aria-label="Anterior">←</button><button type="button" data-dir="1" aria-label="Siguiente">→</button></div></div></div>
 </div></section>
 
 <section class="block alt" id="valoraciones"><div class="wrap formgrid">
@@ -129,7 +160,8 @@
     <p class="eyebrow">Experiencia de especialistas</p>
     <h2 class="title">Tu experiencia también construye Wise.</h2>
     <p class="lede">Comparte cómo el sistema acompaña tu consulta. Tu valoración ayuda a otros especialistas a conocer la experiencia real de nuestra comunidad.</p>
-    <p class="note">Recibimos tu valoración por WhatsApp y la publicamos después de confirmarla contigo. No incluyas información de pacientes.</p>
+    <p class="note">Publicamos cada valoración después de confirmarla contigo. No incluyas información de pacientes.</p>
+    <div id="rv-list"></div>
   </div>
   <form class="panel" id="f-val" novalidate>
     <h3>Valora tu sistema Wise</h3>
@@ -145,7 +177,8 @@
     <label class="fld"><span>Comentario</span><textarea class="field" name="comentario" required maxlength="600"></textarea></label>
     <label class="chk"><input type="checkbox" required><span>Autorizo la publicación de mi nombre, especialidad, provincia y comentario en este sitio. No incluiré información de pacientes.</span></label>
     <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-    <button class="btn primary" type="submit" style="margin-top:10px">Enviar mi valoración por WhatsApp</button>
+    <button class="btn primary" type="submit" style="margin-top:10px">Publicar mi valoración</button>
+    <div id="val-msg" class="fmsg" hidden role="status"></div>
   </form>
 </div></section>
 
@@ -167,7 +200,8 @@
   <div style="margin-top:48px">
     <p class="eyebrow">Trabajo publicado</p>
     <h3 style="font-size:22px;font-weight:600;margin:0 0 16px">Contenido que educa y fortalece marcas médicas.</h3>
-    <div class="posts"><img src="/img/posts/elisa.webp" alt="Publicación educativa para Dra. Elisa Peña Hernández" loading="lazy" width="900" height="1125"><img src="/img/posts/michel.webp" alt="Publicación educativa para Dra. Michel Núñez Suárez" loading="lazy" width="900" height="1125"><img src="/img/posts/rachel.webp" alt="Publicación educativa para Dra. Rachel Pérez" loading="lazy" width="900" height="1125"><img src="/img/posts/annyle.webp" alt="Publicación educativa para Dra. Annyle Burgos" loading="lazy" width="900" height="1125"><img src="/img/posts/glenys.webp" alt="Publicación educativa para Dra. Glenys Nina" loading="lazy" width="900" height="1125"><img src="/img/posts/yessenia.webp" alt="Publicación educativa para Dra. Yessenia Morel" loading="lazy" width="900" height="1125"></div>
+    <div class="car postcar" data-carousel="3000"><div class="track"><div class="slide"><img class="zoom" data-zoom="posts" src="/img/posts/elisa.webp" alt="Publicación educativa para Dra. Elisa Peña Hernández" loading="lazy" width="900" height="1125"></div><div class="slide"><img class="zoom" data-zoom="posts" src="/img/posts/michel.webp" alt="Publicación educativa para Dra. Michel Núñez Suárez" loading="lazy" width="900" height="1125"></div><div class="slide"><img class="zoom" data-zoom="posts" src="/img/posts/rachel.webp" alt="Publicación educativa para Dra. Rachel Pérez" loading="lazy" width="900" height="1125"></div><div class="slide"><img class="zoom" data-zoom="posts" src="/img/posts/annyle.webp" alt="Publicación educativa para Dra. Annyle Burgos" loading="lazy" width="900" height="1125"></div><div class="slide"><img class="zoom" data-zoom="posts" src="/img/posts/glenys.webp" alt="Publicación educativa para Dra. Glenys Nina" loading="lazy" width="900" height="1125"></div><div class="slide"><img class="zoom" data-zoom="posts" src="/img/posts/yessenia.webp" alt="Publicación educativa para Dra. Yessenia Morel" loading="lazy" width="900" height="1125"></div></div>
+      <div class="ctl"><div class="dots"></div><div class="nav2"><button type="button" data-dir="-1" aria-label="Anterior">←</button><button type="button" data-dir="1" aria-label="Siguiente">→</button></div></div></div>
     <p class="note"><a href="https://www.instagram.com/wamc.gestion_medica/" target="_blank" rel="noopener">Ver más trabajos en @wamc.gestion_medica →</a></p>
   </div>
   <div style="margin-top:40px">
@@ -257,9 +291,9 @@
       <li>Lun–Vie 8:00 a. m.–6:00 p. m.<br>Sáb 8:00 a. m.–12:00 p. m.</li>
     </ul></div>
   </div>
-  <div class="legalrow"><span>© <span id="year">2026</span> WandyWise Health Systems · República Dominicana</span><span><a href="/privacidad/">Privacidad</a> · <a href="/aviso-medico/">Aviso médico</a></span></div>
+  <div class="legalrow"><span>© <span id="year">2026</span> WandyWise Health Systems · República Dominicana <span class="visits" hidden>· <b id="visitas">—</b> visitas</span></span><span><a href="/privacidad/">Privacidad</a> · <a href="/aviso-medico/">Aviso médico</a></span></div>
 </div></footer>
 <a class="wa-float" href="https://wa.me/18283786106?text=Hola%2C%20WandyWise%20Health%20Systems.%20Deseo%20informaci%C3%B3n." target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3a.4.4 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4 5.2 5.2 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg><span>WhatsApp</span></a>
-<script src="/assets/site.js?v=20260924" defer></script>
+<script src="/assets/site.js?v=20260925" defer></script>
 </body>
 </html>
