@@ -11,27 +11,28 @@
 <meta property="og:description" content="Membresía de los sistemas Wise, sitios web para médicos, gestión de redes y paquetes, con descuentos por pago semestral o anual.">
 <meta property="og:url" content="https://wandywise.com/servicios/">
 <meta property="og:image" content="https://wandywise.com/img/og.jpg">
-<meta name="theme-color" content="#071f3d">
+<meta name="theme-color" content="#06182f">
+<meta name="view-transition" content="same-origin">
 <link rel="icon" href="/img/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=20260925b">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@500&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="/assets/site.css?v=20260926">
 </head>
-<body>
+<body class="">
 <div class="strip"><div class="wrap">
   <div><span>República Dominicana · Demostraciones por WhatsApp</span></div>
   <div><span class="hide-s"><a href="https://www.instagram.com/wandywise_hs/" target="_blank" rel="noopener">IG @wandywise_hs</a></span><span class="hide-s"><a href="https://www.instagram.com/wamc.gestion_medica/" target="_blank" rel="noopener">IG @wamc.gestion_medica</a></span><span><a href="tel:+18283786106">+1 (828) 378-6106</a></span><span class="hide-s"><a href="mailto:soporte@wandywise.com">soporte@wandywise.com</a></span></div>
 </div></div>
-<header class="top"><div class="wrap">
+<header class="top" id="top"><div class="wrap">
   <a class="logo" href="/" aria-label="WandyWise Health Systems, inicio"><img src="/img/marca/wandywise.webp" alt="WandyWise Health Systems" width="900" height="271"></a>
   <button class="menu-btn" aria-expanded="false" aria-controls="nav">Menú</button>
-  <nav class="nav" id="nav" aria-label="Principal"><a href="/#sistemas">Sistemas</a><a href="/wise-medical-kids/">Kids</a><a href="/wise-medical-gyncare/">GynCare</a><a href="/servicios/" aria-current="page">Servicios</a><a href="https://pagos.wandywise.com">Pagos</a><a href="/#marcas">Marcas</a><a href="/wandy-almonte/">Fundador</a><a class="btn-demo" href="/#demo">Solicitar demo</a></nav>
+  <nav class="nav" id="nav" aria-label="Principal"><a href="/" class="to-cover">Portada</a><a href="/sistemas/">Sistemas</a><a href="/servicios/" aria-current="page">Servicios</a><a href="/marcas/">Marcas</a><a href="/comunidad/">Comunidad</a><a href="/wandy-almonte/">Fundador</a><a href="https://pagos.wandywise.com">Pagos</a><a class="btn-demo" href="/demo/">Solicitar demo</a></nav>
 </div></header>
 <main>
-<section class="page-hero" style="padding-bottom:24px"><div class="wrap" style="grid-template-columns:1fr">
-  <div class="reveal" style="max-width:760px">
+<section class="page-hero dark"><div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div><div class="wrap">
+  <div class="reveal" style="max-width:780px"><a class="crumb" href="/">← Portada</a>
     <p class="eyebrow">Servicios</p>
     <h1>Todo lo que tu consulta necesita, <em>en un solo lugar.</em></h1>
     <p class="lede">Sistemas clínicos, sitios web, gestión de redes y paquetes para especialistas. Regístrate una sola vez para ver los precios, armar tu carrito y pagar con tarjeta o por transferencia.</p>
@@ -56,22 +57,33 @@
         <div id="catalog"></div>
       </section>
 
-      <section class="misc" id="miscelaneo" aria-labelledby="h-misc" hidden>
-        <div>
-          <div id="misc-banner" hidden role="status"></div>
-          <p class="eyebrow">Pago en línea</p>
-          <h3 id="h-misc" style="font-size:24px;font-weight:600;margin:0">Servicio misceláneo</h3>
-          <p class="price num">US$<span id="misc-usd">20</span> <small>pago único</small></p>
-          <p style="color:var(--muted);margin:10px 0 0">Para tareas puntuales que no forman parte de tu plan.</p>
-          <ul><li>Ajustes y configuraciones pequeñas</li><li>Reportes o exportaciones especiales</li><li>Soporte fuera de plan</li><li>Otros servicios breves acordados por WhatsApp</li></ul>
-          <p class="note">Pago seguro con tarjeta a través de Stripe. Recibirás el recibo por correo.</p>
+      <section class="papel" id="papeleria" aria-labelledby="h-papel">
+        <div class="papel-head">
+          <p class="eyebrow">Papelería médica</p>
+          <h3 id="h-papel">Recetarios y hojas timbradas con tu identidad.</h3>
+          <p class="sub">Diseño profesional listo para imprimir o usar en tu sistema. Pago único con tarjeta; después te escribimos para coordinar los detalles.</p>
         </div>
-        <form class="panel" id="f-misc" novalidate style="box-shadow:none">
-          <p class="sub" style="margin-bottom:12px">Usaremos los datos de tu registro para el recibo y para contactarte.</p>
-          <label class="fld"><span>¿Qué servicio necesitas?</span><textarea class="field" name="descripcion" required minlength="5" maxlength="300" placeholder="Ej.: agregar un nuevo formato de receta"></textarea></label>
-          <button class="cta" type="submit" style="margin-top:4px">Pagar US$20 con tarjeta</button>
-          <div id="misc-msg" class="fmsg" hidden role="status"></div>
-        </form>
+        <div class="papel-grid">
+          <article class="pcard2" data-pk="recetario_creacion">
+            <span class="pic" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="10" y="6" width="28" height="36" rx="3"/><path d="M16 15h16M16 21h16M16 27h10"/><path d="M30 32l3 3 6-7"/></svg></span>
+            <h4>Creación de recetario</h4>
+            <p>Diseño nuevo de tu recetario con logo, datos profesionales y formato para indicaciones.</p>
+            <div class="pp"></div>
+          </article>
+          <article class="pcard2" data-pk="recetario_modificacion">
+            <span class="pic" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="10" y="6" width="28" height="36" rx="3"/><path d="M16 15h16M16 21h12"/><path d="M26 36l12-12 3 3-12 12h-3z"/></svg></span>
+            <h4>Modificación de recetario</h4>
+            <p>Actualiza datos, horarios, logo o formato de un recetario que ya tienes.</p>
+            <div class="pp"></div>
+          </article>
+          <article class="pcard2" data-pk="hoja_timbrada">
+            <span class="pic" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="10" y="6" width="28" height="36" rx="3"/><path d="M10 13h28"/><circle cx="17" cy="9.5" r="1.6"/><path d="M16 21h16M16 26h16M16 31h9"/></svg></span>
+            <h4>Hoja timbrada</h4>
+            <p>Membrete institucional para certificados, referimientos, informes y comunicaciones.</p>
+            <div class="pp"></div>
+          </article>
+        </div>
+        <div id="papel-msg" class="fmsg" hidden role="status"></div>
       </section>
 
       <div class="terms" id="terms" hidden>
@@ -171,7 +183,6 @@ const CATS = [
  ]},
  {id:"paquetes", nombre:"Paquetes y otros", nota:"El Plan Presencia Digital Total combina redes, recordatorios y administración web con ahorro frente a contratarlos por separado.", items:[
   {k:"plan_presencia_total", n:"Plan Presencia Digital Total", d:"Posicionamiento Digital + Recordatorio de Citas + Administración web en una sola cuota.", t:"mes", rec:true},
-  {k:"miscelaneo", n:"Servicio misceláneo", d:"Tareas puntuales: ajustes, configuraciones, reportes, soporte fuera de plan y otros servicios pequeños. Se paga en línea con tarjeta.", t:"misc"},
   {k:"office365", n:"Membresía Office 365", d:"Membresía anual de Office 365 gestionada por WWHS.", t:"unico"},
   {k:"otro", n:"Otro servicio", d:"Servicios puntuales o especiales. Escribe el monto acordado y una breve descripción.", t:"abierto"}
  ]}
@@ -269,15 +280,14 @@ function validate(){
 function desbloquear(r){
   PRECIOS = r.precios; MISC = r.misc_usd || 20;
   $("#gate").hidden = true; $("#cartbox").hidden = false;
-  $("#miscelaneo").hidden = false; $("#terms").hidden = false;
-  $("#misc-usd").textContent = MISC;
+  $("#terms").hidden = false; renderPapel();
   $("#hola").textContent = r.nombre ? `Hola, ${r.nombre}. Ya puedes ver los precios.` : "";
   $("#cat-sub").textContent = "Precios estándar en RD$. Si acordaste una tarifa distinta, se respeta en tu recibo.";
   renderTabs(); renderCart();
 }
 function bloquear(){
   PRECIOS = null; TOKEN = null; guardar("wwhs_precios", null); cart = [];
-  $("#gate").hidden = false; $("#cartbox").hidden = true; $("#miscelaneo").hidden = true; $("#terms").hidden = true;
+  $("#gate").hidden = false; $("#cartbox").hidden = true; $("#terms").hidden = true; renderPapel();
   $("#cat-sub").textContent = "Conoce cada servicio. Los precios se muestran al registrarte.";
   renderTabs();
 }
@@ -355,19 +365,28 @@ document.addEventListener("input", e=>{
 });
 document.addEventListener("change", e => { if (e.target.name === "metodo") { validate(); $("#result").hidden = true; } });
 
-// Servicio misceláneo
-$("#f-misc").addEventListener("submit", async e => {
-  e.preventDefault(); const f = e.target; if (!f.reportValidity()) return;
-  const btn = f.querySelector("button[type=submit]"), msg = $("#misc-msg");
-  btn.disabled = true; btn.textContent = "Abriendo el pago seguro…"; msg.hidden = true;
+// Papelería médica: pago directo con tarjeta
+const PAPEL = ["recetario_creacion", "recetario_modificacion", "hoja_timbrada"];
+function renderPapel(){
+  document.querySelectorAll(".pcard2").forEach(card => {
+    const k = card.dataset.pk, box = card.querySelector(".pp"), P = PRECIOS?.[k];
+    box.innerHTML = P
+      ? `<strong class="num">${RD(P.p)}</strong><small>pago único</small><button class="cta pay-p" data-pk="${k}">Pagar con tarjeta</button>`
+      : `<small>Precio disponible al registrarte</small><a class="add" href="#precios" style="text-decoration:none;color:inherit">Ver precio</a>`;
+  });
+}
+document.addEventListener("click", async e => {
+  const b = e.target.closest(".pay-p"); if (!b) return;
+  const msg = $("#papel-msg"); msg.hidden = true;
+  b.disabled = true; const t0 = b.textContent; b.textContent = "Abriendo el pago seguro…";
   try {
-    const { url } = await api("misc_checkout", { token: TOKEN, descripcion: f.descripcion.value, return_url: location.origin + location.pathname });
-    location.href = url;
+    const r = await api("pedido_checkout", { token: TOKEN, metodo: "tarjeta", return_url: location.origin + location.pathname, seleccion: [{ k: b.dataset.pk }] });
+    location.href = r.url; return;
   } catch (err) {
     if (err.status === 401) { bloquear(); gmsg(err.message); }
     msg.className = "fmsg err"; msg.textContent = err.message; msg.hidden = false;
-    btn.disabled = false; btn.textContent = `Pagar US$${MISC} con tarjeta`;
   }
+  b.disabled = false; b.textContent = t0;
 });
 
 // Regreso desde Stripe
@@ -393,7 +412,7 @@ $("#f-misc").addEventListener("submit", async e => {
 })();
 
 // Inicio: si ya se verificó antes en este navegador, muestra los precios
-renderTabs();
+renderTabs(); renderPapel();
 if (TOKEN) api("precios_catalogo", { token: TOKEN }).then(desbloquear).catch(err => { if (err.status === 401) bloquear(); });
 })();
 </script>
@@ -408,13 +427,14 @@ if (TOKEN) api("precios_catalogo", { token: TOKEN }).then(desbloquear).catch(err
     <div><h4>Sistemas</h4><ul>
       <li><a href="/wise-medical-kids/">Wise Medical Kids</a></li>
       <li><a href="/wise-medical-gyncare/">Wise Medical GynCare</a></li>
-      <li><a href="/#marcas">Marcas médicas</a></li>
+      <li><a href="/marcas/">Marcas médicas</a></li>
+      <li><a href="/sistemas/">Todos los sistemas</a></li>
       <li><a href="/servicios/">Servicios y precios</a></li>
     </ul></div>
     <div><h4>Clientes</h4><ul>
       <li><a href="https://pagos.wandywise.com">Pagar en línea</a></li>
-      <li><a href="/#valoraciones">Valorar mi sistema</a></li>
-      <li><a href="/#demo">Solicitar demo</a></li>
+      <li><a href="/comunidad/">Comunidad y valoraciones</a></li>
+      <li><a href="/demo/">Solicitar demo</a></li>
       <li><a href="/wandy-almonte/">Fundador</a></li>
     </ul></div>
     <div><h4>Contacto</h4><ul>
@@ -427,6 +447,6 @@ if (TOKEN) api("precios_catalogo", { token: TOKEN }).then(desbloquear).catch(err
   <div class="legalrow"><span>© <span id="year">2026</span> WandyWise Health Systems · República Dominicana <span class="visits" hidden>· <b id="visitas">—</b> visitas</span></span><span><a href="/privacidad/">Privacidad</a> · <a href="/aviso-medico/">Aviso médico</a></span></div>
 </div></footer>
 <a class="wa-float" href="https://wa.me/18283786106?text=Hola%2C%20WandyWise%20Health%20Systems.%20Deseo%20informaci%C3%B3n." target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3a.4.4 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4 5.2 5.2 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg><span>WhatsApp</span></a>
-<script src="/assets/site.js?v=20260925b" defer></script>
+<script src="/assets/site.js?v=20260926" defer></script>
 </body>
 </html>
