@@ -248,3 +248,27 @@ if (val) {
     msg.hidden = false; btn.disabled = false;
   });
 }
+
+// ── Rediseño inmersivo ─────────────────────────────────────────
+// Barra superior sólida al desplazarse
+(() => {
+  const top = $("#top"); if (!top) return;
+  const f = () => top.classList.toggle("solid", scrollY > 30);
+  addEventListener("scroll", f, { passive: true }); f();
+})();
+// Parallax de la portada con el mouse
+(() => {
+  const art = $("[data-parallax]"); if (!art || reduce) return;
+  let raf = 0;
+  addEventListener("pointermove", e => {
+    if (e.pointerType !== "mouse") return;
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => {
+      art.style.setProperty("--mx", (e.clientX / innerWidth - .5).toFixed(3));
+      art.style.setProperty("--my", (e.clientY / innerHeight - .5).toFixed(3));
+    });
+  });
+})();
+// Aparición de secciones y mosaico al entrar en pantalla
+const io2 = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in-view"); io2.unobserve(e.target); } }), { threshold: 0.04, rootMargin: "0px 0px -8% 0px" });
+$$("section.block, .explore").forEach(el => io2.observe(el));
