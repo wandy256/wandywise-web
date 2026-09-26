@@ -169,6 +169,22 @@ async function iniciar() {
   const matP = new THREE.PointsMaterial({ map: texPunto, size: 0.07, sizeAttenuation: true, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, color: 0xaaf2ff });
   const particulas = new THREE.Points(geoP, matP); escena.add(particulas);
 
+  // ---------- tema claro / oscuro ----------
+  function aplicarTema() {
+    const claro = document.documentElement.dataset.theme === "light";
+    scene.fog.color.set(claro ? 0xf1f7fb : 0x071d38);
+    matP.color.set(claro ? 0x1b7fa6 : 0xaaf2ff);
+    matP.blending = claro ? THREE.NormalBlending : THREE.AdditiveBlending; matP.needsUpdate = true;
+    for (const o of paneles) {
+      o.marco.material.color.set(claro ? 0x1b8fb0 : 0x7fe6ee);
+      o.marco.material.blending = claro ? THREE.NormalBlending : THREE.AdditiveBlending; o.marco.material.needsUpdate = true;
+      o.halo.material.blending = claro ? THREE.NormalBlending : THREE.AdditiveBlending; o.halo.material.needsUpdate = true;
+      o.claro = claro;
+    }
+  }
+  aplicarTema();
+  addEventListener("tema:cambio", aplicarTema);
+
   // ---------- disposición según la columna derecha ----------
   let W = 1, H = 1;
   function disponer() {
@@ -178,9 +194,12 @@ async function iniciar() {
     H = 2 * CAM_Z * Math.tan((camera.fov * Math.PI) / 360); W = H * camera.aspect;
     const cr = cover.getBoundingClientRect(), ar = art.getBoundingClientRect();
     const cx = (ar.left + ar.width / 2 - cr.left) / cw, cy = (ar.top + ar.height / 2 - cr.top) / ch;
-    raiz.position.set((cx - 0.5) * W + 0.25, (0.5 - cy) * H, 0);
     const colW = (ar.width / cw) * W;
-    raiz.scale.setScalar(Math.max(0.7, Math.min(1.4, colW / 4.2)));
+    const esc = Math.max(0.7, Math.min(1.12, colW / 4.7));
+    raiz.scale.setScalar(esc);
+    // Mantiene todos los paneles dentro de la pantalla (el borde derecho de la escena está a ~3 unidades)
+    const x = Math.min((cx - 0.5) * W + 0.05, W / 2 - 0.3 - 3.0 * esc);
+    raiz.position.set(x, (0.5 - cy) * H + 0.15, 0);
   }
   new ResizeObserver(disponer).observe(cover);
   disponer();
@@ -244,7 +263,7 @@ async function iniciar() {
       o.foco = (o.foco || 0) + (((sobre === o) ? 1 : 0) - (o.foco || 0)) * 0.12;
       o.g.scale.setScalar(1 + o.foco * 0.035);
       o.marco.material.opacity = (0.5 + o.foco * 0.5) * k;
-      o.halo.material.opacity = (0.55 + o.foco * 0.35) * k;
+      o.halo.material.opacity = (o.claro ? 0.22 : 0.55 + o.foco * 0.35) * k;
       o.brillo.material.uniforms.uOp.value = k;
       o.brillo.material.uniforms.uShift.value = 0.55 + sx * 0.3 - sy * 0.15 + o.fase * 0.05;
       if (o.etiqueta) o.etiqueta.material.opacity = k;

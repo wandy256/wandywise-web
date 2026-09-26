@@ -344,3 +344,21 @@ $$("section.block, .explore").forEach(el => io2.observe(el));
     view.addEventListener("dragstart", (e) => e.preventDefault());
   });
 })();
+
+// ── Tema claro / oscuro (se recuerda en este navegador) ──
+(() => {
+  const html = document.documentElement, meta = document.getElementById("meta-tema");
+  const pintar = () => {
+    const claro = html.dataset.theme === "light";
+    document.querySelectorAll(".theme-btn").forEach((b) => b.setAttribute("aria-label", claro ? "Cambiar a tema oscuro" : "Cambiar a tema claro"));
+    if (meta) meta.content = claro ? "#ffffff" : "#06182f";
+  };
+  pintar();
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest(".theme-btn"); if (!b) return;
+    const nuevo = html.dataset.theme === "light" ? "dark" : "light";
+    const aplicar = () => { html.dataset.theme = nuevo; pintar(); dispatchEvent(new CustomEvent("tema:cambio", { detail: nuevo })); };
+    if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.startViewTransition(aplicar); else aplicar();
+    try { localStorage.setItem("wwhs_tema", nuevo); } catch (_) {}
+  });
+})();
