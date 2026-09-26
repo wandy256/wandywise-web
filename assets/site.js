@@ -272,3 +272,75 @@ if (val) {
 // Aparición de secciones y mosaico al entrar en pantalla
 const io2 = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in-view"); io2.unobserve(e.target); } }), { threshold: 0.04, rootMargin: "0px 0px -8% 0px" });
 $$("section.block, .explore").forEach(el => io2.observe(el));
+
+// ── Carrusel circular 3D: las imágenes giran en un anillo continuo ──
+//   <div class="ring" data-ring data-speed="grados/seg"> .ring-view > .ring-stage > .ring-item
+(() => {
+  const rm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.querySelectorAll("[data-ring]").forEach((ring) => {
+    const view = ring.querySelector(".ring-view"), stage = ring.querySelector(".ring-stage");
+    const items = [...stage.querySelectorAll(".ring-item")], n = items.length;
+    if (!n) return;
+    const paso = 360 / n, vel = +(ring.dataset.speed || 8);
+    let ang = 0, R = 300, w = 300, pausa = false, arr = null, movido = false, anim = null, visible = true, prev = performance.now();
+    const norm = (d) => ((d % 360) + 540) % 360 - 180;
+    function medir() {
+      w = items[0].offsetWidth || 300;
+      R = Math.max(w * 0.95, (w / 2) / Math.tan(Math.PI / Math.max(n, 3)) * 1.1);
+      stage.style.setProperty("--r", R + "px");
+      items.forEach((it, i) => it.style.setProperty("--a", i * paso + "deg"));
+      const h = Math.max(...items.map((it) => it.offsetHeight));
+      view.style.height = Math.round(h + 56) + "px";
+    }
+    function pintar() {
+      stage.style.transform = `translateZ(${-R}px) rotateY(${-ang}deg)`;
+      items.forEach((it, i) => {
+        const d = norm(i * paso - ang), c = Math.cos((d * Math.PI) / 180);
+        it.style.opacity = Math.max(0, (c - 0.05) / 0.95).toFixed(3);
+        const frente = Math.abs(d) < paso / 2;
+        if (frente !== it.classList.contains("front")) it.classList.toggle("front", frente);
+        it.style.pointerEvents = c > 0.3 ? "auto" : "none";
+        it.setAttribute("aria-hidden", c > 0.3 ? "false" : "true");
+      });
+    }
+    const irA = (destino) => { anim = { de: ang, a: destino, t0: performance.now() }; };
+    const cercano = (i) => ang + norm(i * paso - ang);
+    function tick(t) {
+      const dt = Math.min(64, t - prev) / 1000; prev = t;
+      if (anim) {
+        const k = Math.min(1, (t - anim.t0) / 650), e = 1 - Math.pow(1 - k, 3);
+        ang = anim.de + (anim.a - anim.de) * e; if (k >= 1) anim = null;
+      } else if (!pausa && !arr && !rm && visible && !document.hidden) ang += vel * dt;
+      pintar(); requestAnimationFrame(tick);
+    }
+    medir(); pintar(); requestAnimationFrame(tick);
+    addEventListener("resize", medir);
+    items.forEach((it) => it.querySelectorAll("img").forEach((im) => im.complete || im.addEventListener("load", medir, { once: true })));
+    new IntersectionObserver((es) => (visible = es[0].isIntersecting)).observe(ring);
+    view.addEventListener("mouseenter", () => (pausa = true));
+    view.addEventListener("mouseleave", () => (pausa = false));
+    ring.addEventListener("focusin", (e) => { pausa = true; const i = items.findIndex((it) => it.contains(e.target)); if (i >= 0) irA(cercano(i)); });
+    ring.addEventListener("focusout", () => (pausa = false));
+    ring.querySelectorAll("[data-rdir]").forEach((b) => b.addEventListener("click", () => {
+      const base = anim ? anim.a : ang; irA((Math.round(base / paso) + +b.dataset.rdir) * paso);
+    }));
+    ring.addEventListener("keydown", (e) => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      e.preventDefault(); irA((Math.round(ang / paso) + (e.key === "ArrowRight" ? 1 : -1)) * paso);
+    });
+    view.addEventListener("pointerdown", (e) => { arr = { x0: e.clientX, base: ang }; movido = false; anim = null; });
+    addEventListener("pointermove", (e) => {
+      if (!arr) return;
+      const dx = e.clientX - arr.x0; if (Math.abs(dx) > 6) movido = true;
+      ang = arr.base - (dx * 180) / (Math.PI * R) * 1.4;
+    });
+    addEventListener("pointerup", () => { if (!arr) return; arr = null; if (movido) irA(Math.round(ang / paso) * paso); });
+    // Un arrastre no abre nada; tocar una imagen lateral la trae al frente
+    view.addEventListener("click", (e) => {
+      if (movido) { e.stopPropagation(); e.preventDefault(); movido = false; return; }
+      const it = e.target.closest(".ring-item"); if (!it) return;
+      if (!it.classList.contains("front")) { e.stopPropagation(); e.preventDefault(); irA(cercano(items.indexOf(it))); }
+    }, true);
+    view.addEventListener("dragstart", (e) => e.preventDefault());
+  });
+})();

@@ -822,3 +822,36 @@ dialog.visor[data-tema="gyn"] .vz-now{background:rgba(242,167,196,.07);border-co
 .gyn-page .gal-item:hover{border-color:var(--rose)}
 .car.galinf .ctl{justify-content:space-between}
 .car.galinf .auto{font-size:12.5px;color:var(--muted)}
+
+/* ===== Carrusel circular 3D ===== */
+.orbit{--rw:clamp(250px,27vw,360px);position:relative;margin-top:6px}
+.orbit.orbit-posts{--rw:clamp(190px,19vw,250px)}.orbit.orbit-logos{--rw:clamp(200px,18vw,240px)}
+.ring-view{position:relative;perspective:2200px;perspective-origin:50% 42%;overflow:hidden;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none;height:340px;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
+.ring-view:active{cursor:grabbing}
+.ring-stage{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
+.ring-item{position:absolute;top:24px;left:50%;width:var(--rw);margin-left:calc(var(--rw) / -2);transform:rotateY(var(--a)) translateZ(var(--r));backface-visibility:hidden;-webkit-backface-visibility:hidden;transition:filter .4s}
+.ring-item:not(.front){filter:saturate(.85) brightness(.96)}
+.ring-item.front .gal-item{border-color:var(--mint-dark);box-shadow:0 26px 50px -24px rgba(6,24,47,.55)}
+.gyn-page .ring-item.front .gal-item{border-color:var(--rose)}
+.orbit .gal-item:hover{transform:none}
+.ring-ctl{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap}
+.ring-ctl .auto{font-size:12.5px;color:var(--muted)}
+.ring-ctl .nav2{display:flex;gap:8px}
+.ring-ctl .nav2 button{border:1px solid var(--line);background:var(--card);border-radius:10px;width:42px;height:38px;cursor:pointer;font-size:16px;color:var(--ink)}
+.ring-ctl .nav2 button:hover{border-color:var(--mint-dark)}
+.post-card{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--card)}
+.post-card img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;cursor:zoom-in}
+.post-card figcaption{padding:10px 12px;font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ring-item.front .post-card{border-color:var(--mint-dark);box-shadow:0 26px 50px -24px rgba(6,24,47,.5)}
+@media (max-width:700px){.orbit{--rw:72vw}.orbit.orbit-posts{--rw:56vw}.orbit.orbit-logos{--rw:58vw}.ring-view{perspective:1400px}}
+@media (prefers-reduced-motion:reduce){.ring-item{transition:none}}
+/* Héroes: maqueta clicable */
+.floaty .mockframe{all:unset;display:block;box-sizing:border-box;cursor:zoom-in;border-radius:18px;overflow:hidden;box-shadow:0 40px 90px -35px rgba(0,0,0,.8)}
+.floaty .mockframe img{display:block;width:100%;height:auto}
+.floaty .mockframe:focus-visible{outline:2px solid #7fe6ee;outline-offset:4px}
+
+.logo-card{margin:0;border-radius:16px;border:1px solid var(--line);background:#fff;overflow:hidden}
+.logo-card img{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;padding:18px;cursor:zoom-in}
+.logo-card figcaption{padding:9px 12px;font-size:12.5px;font-weight:600;color:#1d2b3a;border-top:1px solid #e7edf3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ring-item.front .logo-card{border-color:var(--mint-dark);box-shadow:0 26px 50px -24px rgba(6,24,47,.45)}
