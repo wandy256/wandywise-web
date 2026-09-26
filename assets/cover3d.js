@@ -29,11 +29,11 @@ function puedeWebGL() {
 }
 
 const PANELES = [
-  // img, ancho (unidades de escena), posición, rotación base, etiqueta
+  // img (en /img/visor/), visor, ancho (unidades de escena), posición, rotación base, etiqueta
   { img: "kids-inicio", visor: "kids", w: 3.45, p: [-0.1, 0.2, 0.7], r: [0.02, -0.2, 0], etiqueta: "Wise Medical Kids" },
-  { img: "gyn-inicio", visor: "gyn", w: 2.85, p: [1.5, 1.45, -1.7], r: [0.03, -0.27, 0.01], etiqueta: "Wise Medical GynCare" },
-  { img: "kids-curvas", visor: "kids", w: 2.05, p: [-1.15, -1.35, 1.6], r: [-0.02, -0.15, -0.01] },
-  { img: "gyn-prenatal", visor: "gyn", w: 2.2, p: [1.8, -1.15, -0.5], r: [-0.03, -0.3, 0.01] },
+  { img: "gyn-login", visor: "gyn", w: 2.85, p: [1.5, 1.45, -1.7], r: [0.03, -0.27, 0.01], etiqueta: "Wise Medical GynCare" },
+  { img: "kids-neonatal", visor: "kids", w: 2.1, p: [-1.15, -1.35, 1.6], r: [-0.02, -0.15, -0.01] },
+  { img: "kids-acceso", visor: "kids", w: 2.25, p: [1.8, -1.15, -0.5], r: [-0.03, -0.3, 0.01] },
 ];
 
 async function iniciar() {
@@ -112,7 +112,7 @@ async function iniciar() {
   const cargador = new THREE.TextureLoader();
   const maxAniso = renderer.capabilities.getMaxAnisotropy();
   const cargar = (src) => new Promise((ok, mal) => cargador.load(src, ok, undefined, mal));
-  const texturas = await Promise.all(PANELES.map((p) => cargar(`/img/escena/${p.img}.webp`)));
+  const texturas = await Promise.all(PANELES.map((p) => cargar(`/img/visor/${p.img}.webp`)));
 
   const paneles = PANELES.map((def, i) => {
     const tex = texturas[i];
