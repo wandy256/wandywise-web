@@ -697,3 +697,15 @@ h1,h2,h3,h4{font-family:var(--serif)}
 @media (prefers-reduced-motion:reduce){.cover-art img,.cover-art .chip{animation:none!important}.cover-gl{display:none}}
 @media (max-width:980px){.cover-art .chip{display:none}}
 @media (max-width:520px){.cover-facts{flex-wrap:nowrap;gap:14px}.cover-facts li{flex:1 1 0;font-size:12px;line-height:1.3}.cover-facts b{font-size:26px}}
+
+/* Solicitud de acceso a precios */
+#gate-pend{text-align:center;padding:8px 4px 4px}
+#gate-pend .pend-ic svg{width:54px;height:54px;fill:none;stroke:var(--mint-dark);stroke-width:2.4;stroke-linecap:round}
+#gate-pend h4{margin:10px 0 6px;font-size:19px}
+#gate-pend p{color:var(--muted);margin:0 0 16px;font-size:14.5px;line-height:1.5}
+.cta.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.cta.ghost:hover{border-color:var(--ink)}
+.pcard2 .add-p[disabled]{background:#1a8f6a;opacity:1;cursor:default}
+.apr .kv2{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.apr .kv2 span{color:var(--muted)}
+.apr .kv2 b{text-align:right;word-break:break-word}
