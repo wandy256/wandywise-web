@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@500&family=Roboto:ital,wght@0,400;0,500;0,700;1,500;1,700&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=20260927">
+<link rel="stylesheet" href="/assets/site.css?v=20260928">
 </head>
 <body class="">
 <div class="strip"><div class="wrap">
@@ -61,7 +61,7 @@
         <div class="papel-head">
           <p class="eyebrow">Papelería médica</p>
           <h3 id="h-papel">Recetarios y hojas timbradas con tu identidad.</h3>
-          <p class="sub">Diseño profesional listo para imprimir o usar en tu sistema. Pago único con tarjeta; después te escribimos para coordinar los detalles.</p>
+          <p class="sub">Diseño profesional listo para imprimir o usar en tu sistema. Agrega uno o varios a tu carrito, junto con otros servicios, y paga todo en un solo pago con tarjeta o transferencia.</p>
         </div>
         <div class="papel-grid">
           <article class="pcard2" data-pk="recetario_creacion">
@@ -97,8 +97,8 @@
       <!-- Registro para ver precios -->
       <div id="gate">
         <p class="eyebrow" style="margin-bottom:6px">Precios</p>
-        <h3 style="margin:0 0 4px">Regístrate para ver los precios</h3>
-        <p class="sub">Te enviamos un código por SMS para confirmar tu número. Solo lo harás una vez.</p>
+        <h3 style="margin:0 0 4px">Solicita acceso a los precios</h3>
+        <p class="sub">Regístrate, confirma tu número con el código que te enviamos por SMS y revisamos tu solicitud. Te avisamos por correo y SMS cuando esté aprobada.</p>
         <form id="f-reg" novalidate>
           <div class="f2">
             <label class="fld"><span>Nombre</span><input class="field" name="nombre" required minlength="2" autocomplete="given-name"></label>
@@ -107,16 +107,23 @@
           <label class="fld"><span>Especialidad</span><input class="field" name="especialidad" required minlength="2" placeholder="Ej.: Pediatría"></label>
           <label class="fld"><span>Teléfono móvil</span><input class="field" name="telefono" required inputmode="tel" autocomplete="tel" placeholder="809 000 0000"></label>
           <label class="fld"><span>Correo electrónico</span><input class="field" type="email" name="email" required autocomplete="email"></label>
-          <label class="chk"><input type="checkbox" required><span>Acepto que WandyWise use estos datos para enviarme el código y darme seguimiento, según la <a href="/privacidad/">Política de privacidad</a>.</span></label>
+          <label class="chk"><input type="checkbox" required><span>Acepto que WandyWise use estos datos para enviarme el código, responder mi solicitud y darme seguimiento, según la <a href="/privacidad/">Política de privacidad</a>.</span></label>
           <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
           <button class="cta" type="submit">Enviarme el código</button>
         </form>
         <form id="f-code" novalidate hidden>
           <p style="margin:0 0 12px">Escribe el código de 6 dígitos que enviamos por SMS al <b id="tel-mask"></b>.</p>
           <label class="fld"><span>Código de verificación</span><input class="field num" name="codigo" required inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" style="font-size:22px;letter-spacing:.3em;text-align:center"></label>
-          <button class="cta" type="submit">Ver precios</button>
+          <button class="cta" type="submit">Enviar solicitud</button>
           <p class="hint"><button type="button" id="re-send" class="zoombtn" style="border:0;background:none;color:var(--mint-dark);text-decoration:underline">Enviar otro código</button> · <button type="button" id="re-edit" class="zoombtn" style="border:0;background:none;color:var(--mint-dark);text-decoration:underline">Cambiar mis datos</button></p>
         </form>
+        <div id="gate-pend" hidden>
+          <div class="pend-ic" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="18"/><path d="M24 14v11l7 4"/></svg></div>
+          <h4 id="pend-t">Recibimos tu solicitud</h4>
+          <p id="pend-p">Revisaremos tus datos y te enviaremos el acceso a los precios por correo y SMS. Normalmente respondemos el mismo día laborable.</p>
+          <button type="button" class="cta ghost" id="pend-check">Ya me aprobaron · revisar</button>
+          <p class="hint"><button type="button" id="pend-new" class="zoombtn" style="border:0;background:none;color:var(--mint-dark);text-decoration:underline">Registrar otros datos</button></p>
+        </div>
         <div id="gate-msg" class="fmsg" hidden role="status"></div>
       </div>
 
@@ -187,9 +194,14 @@ const CATS = [
   {k:"otro", n:"Otro servicio", d:"Servicios puntuales o especiales. Escribe el monto acordado y una breve descripción.", t:"abierto"}
  ]}
 ];
-const BYKEY = {}; CATS.forEach(c=>c.items.forEach(i=>BYKEY[i.k]=i));
+const PAPEL_ITEMS = [
+  {k:"recetario_creacion", n:"Creación de recetario", t:"unico"},
+  {k:"recetario_modificacion", n:"Modificación de recetario", t:"unico"},
+  {k:"hoja_timbrada", n:"Hoja timbrada", t:"unico"}
+];
+const BYKEY = {}; CATS.forEach(c=>c.items.forEach(i=>BYKEY[i.k]=i)); PAPEL_ITEMS.forEach(i=>BYKEY[i.k]=i);
 
-let PRECIOS = null, MISC = 20, TOKEN = leer("wwhs_precios"), tab = "sistema", cart = [], leadId = null;
+let PRECIOS = null, MISC = 20, TOKEN = leer("wwhs_precios"), tab = "sistema", cart = [], leadId = leer("wwhs_solicitud");
 tab = ({"#redes":"redes","#web":"web","#paquetes":"paquetes"})[location.hash] || tab;
 
 const disponible = it => it.t === "misc" || it.t === "abierto" || (PRECIOS && PRECIOS[it.k]);
@@ -279,6 +291,8 @@ function validate(){
 // ── Estado: bloqueado / desbloqueado ───────────────────────
 function desbloquear(r){
   PRECIOS = r.precios; MISC = r.misc_usd || 20;
+  if (r.token) { TOKEN = r.token; guardar("wwhs_precios", TOKEN); }
+  guardar("wwhs_solicitud", null); leadId = null;
   $("#gate").hidden = true; $("#cartbox").hidden = false;
   $("#terms").hidden = false; renderPapel();
   $("#hola").textContent = r.nombre ? `Hola, ${r.nombre}. Ya puedes ver los precios.` : "";
@@ -288,6 +302,7 @@ function desbloquear(r){
 function bloquear(){
   PRECIOS = null; TOKEN = null; guardar("wwhs_precios", null); cart = [];
   $("#gate").hidden = false; $("#cartbox").hidden = true; $("#terms").hidden = true; renderPapel();
+  if (!leadId) { $("#gate-pend").hidden = true; $("#f-code").hidden = true; $("#f-reg").hidden = false; }
   $("#cat-sub").textContent = "Conoce cada servicio. Los precios se muestran al registrarte.";
   renderTabs();
 }
@@ -317,12 +332,42 @@ $("#f-code").addEventListener("submit", async e => {
   const b = f.querySelector("button[type=submit]"); b.disabled = true; b.textContent = "Verificando…";
   try {
     const r = await api("precios_verificar", { lead_id: leadId, codigo: f.codigo.value });
-    TOKEN = r.token; guardar("wwhs_precios", TOKEN); gmsg("");
-    desbloquear(r);
-    document.getElementById("catalogo").scrollIntoView({ behavior: "smooth", block: "start" });
+    gmsg("");
+    if (r.estado === "aprobado") { desbloquear(r); document.getElementById("catalogo").scrollIntoView({ behavior: "smooth", block: "start" }); }
+    else mostrarEstado(r);
   } catch (err) { gmsg(err.message); }
-  b.disabled = false; b.textContent = "Ver precios";
+  b.disabled = false; b.textContent = "Enviar solicitud";
 });
+
+// Estado de la solicitud (en espera · rechazada · vencida)
+function mostrarEstado(r){
+  $("#f-reg").hidden = true; $("#f-code").hidden = true;
+  if (r.estado === "solicitado") {
+    leadId = r.lead_id || leadId; guardar("wwhs_solicitud", leadId);
+    $("#pend-t").textContent = "Recibimos tu solicitud";
+    $("#pend-p").textContent = "Revisaremos tus datos y te enviaremos el acceso a los precios por correo y SMS. Normalmente respondemos el mismo día laborable.";
+    $("#pend-check").hidden = false; $("#gate-pend").hidden = false;
+  } else if (r.estado === "rechazado") {
+    guardar("wwhs_solicitud", null); leadId = null;
+    $("#pend-t").textContent = "No pudimos aprobar tu solicitud";
+    $("#pend-p").textContent = "Si crees que es un error o quieres más información, escríbenos por WhatsApp y con gusto te ayudamos.";
+    $("#pend-check").hidden = true; $("#gate-pend").hidden = false;
+  } else {
+    guardar("wwhs_solicitud", null); leadId = null;
+    $("#gate-pend").hidden = true; $("#f-reg").hidden = false;
+    if (r.estado === "vencido") gmsg("Tu acceso venció. Regístrate de nuevo para renovarlo; si ya te aprobamos antes, verás los precios al confirmar el código.", true);
+  }
+}
+async function revisarSolicitud(aviso){
+  if (!leadId) return;
+  try {
+    const r = await api("precios_estado", { lead_id: leadId });
+    if (r.estado === "aprobado") { desbloquear(r); gmsg(""); }
+    else { mostrarEstado(r); if (aviso && r.estado === "solicitado") gmsg("Tu solicitud sigue en revisión. Te avisaremos por correo y SMS.", true); }
+  } catch (e) { if (aviso) gmsg(e.message); }
+}
+$("#pend-check").addEventListener("click", () => revisarSolicitud(true));
+$("#pend-new").addEventListener("click", () => { guardar("wwhs_solicitud", null); leadId = null; $("#gate-pend").hidden = true; $("#f-reg").hidden = false; gmsg(""); });
 $("#re-send").addEventListener("click", () => ultimoRegistro && api("precios_registro", ultimoRegistro).then(() => gmsg("Te enviamos un código nuevo.", true)).catch(e => gmsg(e.message)));
 $("#re-edit").addEventListener("click", () => { $("#f-code").hidden = true; $("#f-reg").hidden = false; gmsg(""); });
 $("#salir").addEventListener("click", bloquear);
@@ -331,8 +376,12 @@ $("#salir").addEventListener("click", bloquear);
 document.addEventListener("click", async e=>{
   const b = e.target.closest("button"); if(!b || !b.closest(".shop")) return;
   if(b.dataset.t){ tab=b.dataset.t; renderTabs(); }
-  else if(b.dataset.k){ cart.push({k:b.dataset.k, m:1, mitad:true}); renderTabs(); renderCart(); $("#result").hidden=true; }
-  else if(b.dataset.rm!==undefined){ cart.splice(+b.dataset.rm,1); renderTabs(); renderCart(); $("#result").hidden=true; }
+  else if(b.dataset.k){
+    if(!PRECIOS || cart.some(x=>x.k===b.dataset.k)) return;
+    cart.push({k:b.dataset.k, m:1, mitad:true}); renderTabs(); renderCart(); renderPapel(); $("#result").hidden=true;
+    if(b.closest(".papel")){ const m=$("#papel-msg"); m.className="fmsg ok"; m.innerHTML=`Agregado a tu carrito. <a href="#precios">Ver carrito y pagar →</a>`; m.hidden=false; }
+  }
+  else if(b.dataset.rm!==undefined){ cart.splice(+b.dataset.rm,1); renderTabs(); renderCart(); renderPapel(); $("#result").hidden=true; }
   else if(b.dataset.m){ cart[+b.dataset.i].m=+b.dataset.m; renderCart(); $("#result").hidden=true; }
   else if(b.dataset.h){ cart[+b.dataset.i].mitad = b.dataset.h==="1"; renderCart(); $("#result").hidden=true; }
   else if(b.id==="go"){
@@ -365,29 +414,15 @@ document.addEventListener("input", e=>{
 });
 document.addEventListener("change", e => { if (e.target.name === "metodo") { validate(); $("#result").hidden = true; } });
 
-// Papelería médica: pago directo con tarjeta
-const PAPEL = ["recetario_creacion", "recetario_modificacion", "hoja_timbrada"];
+// Papelería médica: se agrega al carrito (un solo pago junto con otros servicios)
 function renderPapel(){
   document.querySelectorAll(".pcard2").forEach(card => {
-    const k = card.dataset.pk, box = card.querySelector(".pp"), P = PRECIOS?.[k];
+    const k = card.dataset.pk, box = card.querySelector(".pp"), P = PRECIOS?.[k], en = cart.some(x=>x.k===k);
     box.innerHTML = P
-      ? `<strong class="num">${RD(P.p)}</strong><small>pago único</small><button class="cta pay-p" data-pk="${k}">Pagar con tarjeta</button>`
-      : `<small>Precio disponible al registrarte</small><a class="add" href="#precios" style="text-decoration:none;color:inherit">Ver precio</a>`;
+      ? `<strong class="num">${RD(P.p)}</strong><small>pago único</small><button class="cta add-p" data-k="${k}" ${en?"disabled":""}>${en?"✓ En tu carrito":"Agregar al carrito"}</button>`
+      : `<small>Precio disponible al aprobar tu acceso</small><a class="add" href="#precios" style="text-decoration:none;color:inherit">Ver precio</a>`;
   });
 }
-document.addEventListener("click", async e => {
-  const b = e.target.closest(".pay-p"); if (!b) return;
-  const msg = $("#papel-msg"); msg.hidden = true;
-  b.disabled = true; const t0 = b.textContent; b.textContent = "Abriendo el pago seguro…";
-  try {
-    const r = await api("pedido_checkout", { token: TOKEN, metodo: "tarjeta", return_url: location.origin + location.pathname, seleccion: [{ k: b.dataset.pk }] });
-    location.href = r.url; return;
-  } catch (err) {
-    if (err.status === 401) { bloquear(); gmsg(err.message); }
-    msg.className = "fmsg err"; msg.textContent = err.message; msg.hidden = false;
-  }
-  b.disabled = false; b.textContent = t0;
-});
 
 // Regreso desde Stripe
 (() => {
@@ -413,7 +448,12 @@ document.addEventListener("click", async e => {
 
 // Inicio: si ya se verificó antes en este navegador, muestra los precios
 renderTabs(); renderPapel();
-if (TOKEN) api("precios_catalogo", { token: TOKEN }).then(desbloquear).catch(err => { if (err.status === 401) bloquear(); });
+{ // Enlace de acceso aprobado (correo / SMS): /servicios/?acceso=TOKEN
+  const q = new URLSearchParams(location.search), acc = q.get("acceso");
+  if (acc && /^[a-f0-9]{48}$/.test(acc)) { TOKEN = acc; guardar("wwhs_precios", acc); history.replaceState(null, "", location.pathname + "#precios"); }
+}
+if (TOKEN) api("precios_catalogo", { token: TOKEN }).then(desbloquear).catch(err => { if (err.status === 401) { bloquear(); if (leadId) revisarSolicitud(false); } });
+else if (leadId) revisarSolicitud(false);
 })();
 </script>
 
@@ -447,6 +487,6 @@ if (TOKEN) api("precios_catalogo", { token: TOKEN }).then(desbloquear).catch(err
   <div class="legalrow"><span>© <span id="year">2026</span> WandyWise Health Systems · República Dominicana <span class="visits" hidden>· <b id="visitas">—</b> visitas</span></span><span><a href="/privacidad/">Privacidad</a> · <a href="/aviso-medico/">Aviso médico</a></span></div>
 </div></footer>
 <a class="wa-float" href="https://wa.me/18283786106?text=Hola%2C%20WandyWise%20Health%20Systems.%20Deseo%20informaci%C3%B3n." target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3a.4.4 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4 5.2 5.2 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg><span>WhatsApp</span></a>
-<script src="/assets/site.js?v=20260927" defer></script>
+<script src="/assets/site.js?v=20260928" defer></script>
 </body>
 </html>
