@@ -30,10 +30,10 @@ function puedeWebGL() {
 
 const PANELES = [
   // img, ancho (unidades de escena), posición, rotación base, etiqueta
-  { img: "kids-inicio", w: 3.45, p: [-0.1, 0.2, 0.7], r: [0.02, -0.2, 0], etiqueta: "Wise Medical Kids" },
-  { img: "gyn-inicio", w: 2.85, p: [1.5, 1.45, -1.7], r: [0.03, -0.27, 0.01], etiqueta: "Wise Medical GynCare" },
-  { img: "kids-curvas", w: 2.05, p: [-1.15, -1.35, 1.6], r: [-0.02, -0.15, -0.01] },
-  { img: "gyn-prenatal", w: 2.2, p: [1.8, -1.15, -0.5], r: [-0.03, -0.3, 0.01] },
+  { img: "kids-inicio", visor: "kids", w: 3.45, p: [-0.1, 0.2, 0.7], r: [0.02, -0.2, 0], etiqueta: "Wise Medical Kids" },
+  { img: "gyn-inicio", visor: "gyn", w: 2.85, p: [1.5, 1.45, -1.7], r: [0.03, -0.27, 0.01], etiqueta: "Wise Medical GynCare" },
+  { img: "kids-curvas", visor: "kids", w: 2.05, p: [-1.15, -1.35, 1.6], r: [-0.02, -0.15, -0.01] },
+  { img: "gyn-prenatal", visor: "gyn", w: 2.2, p: [1.8, -1.15, -0.5], r: [-0.03, -0.3, 0.01] },
 ];
 
 async function iniciar() {
@@ -191,6 +191,30 @@ async function iniciar() {
     mx = (e.clientX / innerWidth) * 2 - 1; my = (e.clientY / innerHeight) * 2 - 1;
   }, { passive: true });
 
+  // ── Clic en una pantalla: abre el visor con su descripción ──
+  const rayo = new THREE.Raycaster(), ptr = new THREE.Vector2();
+  const pantallas = paneles.map((o) => o.pantalla);
+  let sobre = null;
+  const tocado = (e) => {
+    if (e.target.closest("a, button, input, label, .cover-txt")) return null;
+    const r = canvas.getBoundingClientRect();
+    ptr.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    rayo.setFromCamera(ptr, camera);
+    const h = rayo.intersectObjects(pantallas, false)[0];
+    return h ? paneles.find((o) => o.pantalla === h.object) : null;
+  };
+  cover.addEventListener("pointermove", (e) => {
+    if (e.pointerType !== "mouse" || !cover.classList.contains("gl-on")) return;
+    sobre = tocado(e);
+    cover.classList.toggle("gl-hover", !!sobre);
+  }, { passive: true });
+  cover.addEventListener("pointerleave", () => { sobre = null; cover.classList.remove("gl-hover"); });
+  cover.addEventListener("click", (e) => {
+    if (!cover.classList.contains("gl-on")) return;
+    const o = tocado(e);
+    if (o) dispatchEvent(new CustomEvent("visor:abrir", { detail: { id: o.def.visor, slide: o.def.img } }));
+  });
+
   const ease = (x) => 1 - Math.pow(1 - x, 3);
   let activo = true, visible = true, t0 = performance.now(), ultimo = t0, raf = 0, primero = true;
   const TAU = Math.PI * 2;
@@ -217,8 +241,10 @@ async function iniciar() {
       o.g.rotation.z = o.def.r[2] + Math.sin((t * TAU) / 14 + o.fase) * 0.006;
       o.pantalla.material.opacity = k;
       o.losa.material.opacity = 0.075 * k;
-      o.marco.material.opacity = 0.5 * k;
-      o.halo.material.opacity = 0.55 * k;
+      o.foco = (o.foco || 0) + (((sobre === o) ? 1 : 0) - (o.foco || 0)) * 0.12;
+      o.g.scale.setScalar(1 + o.foco * 0.035);
+      o.marco.material.opacity = (0.5 + o.foco * 0.5) * k;
+      o.halo.material.opacity = (0.55 + o.foco * 0.35) * k;
       o.brillo.material.uniforms.uOp.value = k;
       o.brillo.material.uniforms.uShift.value = 0.55 + sx * 0.3 - sy * 0.15 + o.fase * 0.05;
       if (o.etiqueta) o.etiqueta.material.opacity = k;
