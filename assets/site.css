@@ -490,7 +490,7 @@ textarea.field{min-height:96px;resize:vertical}
 /* =====================================================================
    REDISEÑO INMERSIVO · portada, héroes oscuros, transiciones
    ===================================================================== */
-:root{--night:#06182f;--night-2:#0a2544;--glass:rgba(255,255,255,.06);--glass-line:rgba(255,255,255,.12);--ink-on-dark:#eaf3f7;--muted-on-dark:#9fb6c6;--serif:"Instrument Serif",Georgia,"Times New Roman",serif}
+:root{--night:#06182f;--night-2:#0a2544;--glass:rgba(255,255,255,.06);--glass-line:rgba(255,255,255,.12);--ink-on-dark:#eaf3f7;--muted-on-dark:#9fb6c6;--serif:"Roboto",system-ui,Arial,sans-serif}
 @view-transition{navigation:auto}
 ::view-transition-old(root){animation:.35s ease both vt-out}
 ::view-transition-new(root){animation:.45s ease both vt-in}
@@ -499,7 +499,7 @@ textarea.field{min-height:96px;resize:vertical}
 @media (prefers-reduced-motion:reduce){::view-transition-old(root),::view-transition-new(root){animation:none}}
 
 /* Tipografía de exhibición */
-h1,h2.title,.ex-head h2,.cta-band h2{font-family:var(--serif);font-weight:400;letter-spacing:-.01em}
+h1,h2.title,.ex-head h2,.cta-band h2{font-family:var(--serif);font-weight:700;letter-spacing:-.025em}
 h1{font-size:clamp(44px,6.4vw,84px);line-height:.98}
 h2.title{font-size:clamp(36px,4.6vw,58px);line-height:1.02}
 h1 em,h2 em{font-style:italic}
@@ -568,7 +568,7 @@ h1 em,h2 em{font-style:italic}
 .cover h1 em{color:transparent;background:linear-gradient(100deg,#7fe0f0,#f2a7c4 65%,#ff9b86);-webkit-background-clip:text;background-clip:text}
 .cover .lede{color:var(--muted-on-dark);max-width:52ch}
 .cover-facts{list-style:none;padding:0;margin:34px 0 0;display:flex;gap:28px;flex-wrap:wrap;color:var(--muted-on-dark);font-size:13.5px}
-.cover-facts b{display:block;font-family:var(--serif);font-weight:400;font-size:34px;color:#fff;line-height:1}
+.cover-facts b{display:block;font-family:var(--serif);font-weight:600;font-size:34px;color:#fff;line-height:1}
 .cover-art{position:relative;height:520px;perspective:1400px;--mx:0;--my:0}
 .cover-art img{position:absolute;border-radius:16px;border:1px solid rgba(255,255,255,.14);box-shadow:0 40px 80px -30px rgba(0,0,0,.8);background:#fff;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
 .cover-art .s1{width:78%;right:0;top:4%;transform:rotateY(-14deg) rotateX(6deg) translate3d(calc(var(--mx)*-14px),calc(var(--my)*-10px),0);animation:float1 9s ease-in-out infinite}
@@ -612,7 +612,7 @@ h1 em,h2 em{font-style:italic}
 @keyframes orb{to{transform:translate(-30px,30px) scale(1.1)}}
 .tile .tx{padding:22px 24px;display:grid;gap:4px;max-width:520px}
 .tile .eb{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#8fe3f2}
-.tile strong{font-family:var(--serif);font-weight:400;font-size:clamp(26px,2.6vw,38px);line-height:1.02}
+.tile strong{font-family:var(--serif);font-weight:600;font-size:clamp(26px,2.6vw,38px);line-height:1.02}
 .t-a strong{font-size:clamp(34px,3.6vw,52px)}
 .tile .ds{font-size:14px;color:#c6d7e2;line-height:1.45}
 .tile .go{position:absolute;top:18px;right:18px;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(8px);font-size:18px;transition:background .3s,transform .3s}
@@ -634,7 +634,7 @@ h1 em,h2 em{font-style:italic}
 
 /* ===================== Papelería médica ===================== */
 .papel{margin-top:28px;background:linear-gradient(160deg,var(--card),var(--mint-pale));border:1px solid var(--line);border-radius:24px;padding:clamp(20px,3vw,32px);scroll-margin-top:100px}
-.papel-head h3{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3vw,38px);line-height:1.05;margin:0 0 6px}
+.papel-head h3{font-family:var(--serif);font-weight:600;font-size:clamp(28px,3vw,38px);line-height:1.05;margin:0 0 6px}
 .papel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
 @media (max-width:860px){.papel-grid{grid-template-columns:1fr}}
 .pcard2{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:8px;transition:transform .3s,box-shadow .3s}
@@ -655,3 +655,4 @@ h1 em,h2 em{font-style:italic}
 .page-hero.dark .btn.ghost{color:#fff;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.04)}
 .page-hero.dark .btn.ghost:hover{border-color:#fff}
 .page-hero.dark .client-box{background:rgba(255,255,255,.06)}
+h1,h2,h3,h4{font-family:var(--serif)}
