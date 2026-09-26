@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
+Disallow: /aprobar/
 Sitemap: https://wandywise.com/sitemap.xml
