@@ -52,7 +52,7 @@
     setZoom(false);
     const poner = () => {
       img.src = sl.src; img.alt = sl.t;
-      view.classList.toggle("doc", !!sl.doc);
+      view.classList.toggle("doc", !!sl.doc); view.classList.toggle("is-mock", !!sl.mock);
       $(".vz-st").textContent = sl.t;
       $(".vz-sd").textContent = sl.d;
       $(".vz-count").textContent = `${String(idx + 1).padStart(2, "0")} / ${String(n).padStart(2, "0")}`;

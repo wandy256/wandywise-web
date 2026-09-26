@@ -797,3 +797,6 @@ dialog.visor[data-tema="gyn"] .vz-now{background:rgba(242,167,196,.07);border-co
 
 .vz-thumbs button span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 @media (min-width:981px){.cover-ver{position:absolute;right:0;bottom:-22px;margin:0;flex-wrap:nowrap;white-space:nowrap}}
+.vz-view.is-mock .vz-img{background:transparent;box-shadow:none;border-radius:14px}
+.vz-thumbs button{width:132px;min-width:0}
+@media (max-width:900px){.vz-thumbs button{width:104px}}
